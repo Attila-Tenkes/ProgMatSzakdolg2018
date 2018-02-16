@@ -48,6 +48,7 @@ import * as Charts from 'fusioncharts/fusioncharts.charts';
 //DevExtereme
 import { DxButtonModule, DxPopupModule } from 'devextreme-angular';
 import { DxSelectBoxModule, DxCheckBoxModule, DxListModule, DxDataGridModule, DxDateBoxModule } from 'devextreme-angular';
+import { DxScrollViewModule, DxScrollViewComponent}from 'devextreme-angular';
 
 import { SingleSeriesChartComponent } from './components/singleSeriesChart.component';
 
@@ -66,7 +67,8 @@ import { SingleSeriesChartComponent } from './components/singleSeriesChart.compo
         //devEx controls        
         DxButtonModule,
         DxPopupModule,
-        DxSelectBoxModule, DxCheckBoxModule, DxListModule, DxDataGridModule, DxDateBoxModule
+        DxSelectBoxModule, DxCheckBoxModule, DxListModule, DxDataGridModule, DxDateBoxModule,
+        DxScrollViewModule
     ],
     exports: [       
         TruncatePipe

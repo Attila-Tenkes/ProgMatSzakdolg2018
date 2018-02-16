@@ -47,10 +47,19 @@
         [closeOnOutsideClick]="false"
         [(visible)]="isInspectorPopupVisible">
         <div *dxTemplate="let data of 'content'">
-            <p>
-              <ctlObjectInspector  [node]="_root" [root]="_data"> </ctlObjectInspector>
-              <dx-button text="Close" (onClick)="showHideInspector(false)"></dx-button>
-            </p>
+            <dx-scroll-view #scrollView
+                id="scrollviewInsp"
+                [scrollByContent]="scrollByContent"
+                [scrollByThumb]="scrollByThumb"
+                [showScrollbar]="scrollbarMode"
+                [bounceEnabled]="pullDown"
+                reachBottomText="Updating..."
+               >
+                <p>
+                <ctlObjectInspector  [node]="_root" [root]="_data"> </ctlObjectInspector>
+                <dx-button text="Close" (onClick)="showHideInspector(false)"></dx-button>
+                </p>
+            </dx-scroll-view>
         </div>
     </dx-popup>
 
@@ -64,11 +73,22 @@
         [dragEnabled]="true"
         [closeOnOutsideClick]="false"
         [(visible)]="isExplorerPopupVisible">
+
+        
         <div *dxTemplate="let data of 'content'">
-            <p>
-               <ctlExplorer [node]="_root" [root]="_data" [designer]="_me"> </ctlExplorer>
-               <dx-button text="Close" (onClick)="showHideExplorer(false)"></dx-button>
-            </p>
+            <dx-scroll-view #scrollView
+                id="scrollviewExp"
+                [scrollByContent]="scrollByContent"
+                [scrollByThumb]="scrollByThumb"
+                [showScrollbar]="scrollbarMode"
+                [bounceEnabled]="pullDown"
+                reachBottomText="Updating..."
+               >
+                <p>
+                <ctlExplorer [node]="_root" [root]="_data" [designer]="_me"> </ctlExplorer>
+                <dx-button text="Close" (onClick)="showHideExplorer(false)"></dx-button>
+                </p>
+            </dx-scroll-view>
         </div>
     </dx-popup>
        <!-- <div id='dbObjExplorer' style="width: 300px;">	

@@ -29,8 +29,8 @@ export class ObjectInspectorComponent implements AfterViewInit{
     {
         var that = this;
         this._parent=parent;
-        this.fileAdminSVC.getImagesOnce().then(x=>this.theImageFiles=x);
-        this.dsSvc.getDataSourcesOnce().then(x=>this.theDataSources=x);
+        this.fileAdminSVC.getImagesOnce().then(x=>{this.theImageFiles=x;});
+        this.dsSvc.getDataSourcesOnce().then(x=>{this.theDataSources=x;});       
     }
 
     onImageDDLChange(selectedImage:any) {
@@ -52,18 +52,24 @@ export class ObjectInspectorComponent implements AfterViewInit{
         }
        // this.root.selected.widget.setDataSource(selectedDS);
     }
-onKey(event: KeyboardEvent)  {
+    onKey(event: KeyboardEvent)  {
 
-    //todo type check!
-    //todo keycode check
-    (<widgets.FusionWidget>this.root.selected.widget)._dataSource["depPropName"] = (<widgets.FusionWidget>this.root.selected.widget).DependencyPropertyName;
-}
-onKey2(event: KeyboardEvent)  {
+        //todo type check!
+        //todo keycode check
+        (<widgets.FusionWidget>this.root.selected.widget)._dataSource["depPropName"] = (<widgets.FusionWidget>this.root.selected.widget).DependencyPropertyName;
+    }
+    onKey2(event: KeyboardEvent)  {
 
-    //todo type check!
-    //todo keycode check
-    (<widgets.FusionWidget>this.root.selected.widget)._dataSource["depPropExp"] = (<widgets.FusionWidget>this.root.selected.widget).DependencyPropertyExpression;
-}
+        //todo type check!
+        //todo keycode check
+        (<widgets.FusionWidget>this.root.selected.widget)._dataSource["depPropExp"] = (<widgets.FusionWidget>this.root.selected.widget).DependencyPropertyExpression;
+    }
+    onKey3(event: KeyboardEvent)  {
+
+        //todo type check!
+        //todo keycode check      
+        this.root.sortChildren(this.root.selected);
+    }
     ngAfterViewInit(){
         var that = this;
         $(document).ready(function(){
@@ -74,15 +80,17 @@ onKey2(event: KeyboardEvent)  {
     getProperties(){
         let nodeProp=  Object.getOwnPropertyNames(this.root.selected).filter(
             function(x){
-                   // return x!=='widget' && x!=='cells'&& x!=='domId'       && x!=='id'});
-                   return x.indexOf("_")!=0;
+                    return x!=='widget' && x!=='cells'&& x!=='domId'   && x!=='id' &&  x.indexOf("_")!=0;
+                   //return x.indexOf("_")!=0;
                 }
         );
         return nodeProp;
     }
+
     getValue(prop:string){
         return this.root.selected[prop];
     }    
+    
     getWidgetProperties(){            
         let widgetProp=  Object.getOwnPropertyNames(this.root.selected.widget).filter(
             function(x){                   

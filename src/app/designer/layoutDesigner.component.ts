@@ -124,7 +124,7 @@ export class LayoutDesignerComponent {
                                 {
                                      
                                      var observer =<widgets.DependencyReceiver> node.widget ;                                     
-                                     observer.notify(arg);                                                               
+                                     observer.notify(arg);                                                                                                
                                 }                                        
                             },  
                             this.dependenyProperties);                             

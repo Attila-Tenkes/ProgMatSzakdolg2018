@@ -16,7 +16,7 @@ export interface IDependencySubject {
 
 export class Widget {
     public _dataSource?: Object;    
-    
+    public visibleOrder:number;
     public title: string;
     public heigth:number=100;
     public width:number=100;
@@ -215,7 +215,7 @@ export class FusionWidget extends DependencyReceiver implements IDependencySubje
         this.dataSourceID = dataSourceID;
     }
     notify(x: any):void{
-        debugger;
+        //debugger;
 //if depExp and depprop >> load _tag.notify();
         this.load(null, x).then(x=>{
 
@@ -384,7 +384,7 @@ export class WidgetFact
         result.width = json.width?json.width:100;        
         result.title =json.title||''; 
         result._tag = context;     
-       
+        result.visibleOrder =   json.visibleOrder?json.visibleOrder:0;
         result.load().then(x=>
             {             
                 if (x && result._tag){

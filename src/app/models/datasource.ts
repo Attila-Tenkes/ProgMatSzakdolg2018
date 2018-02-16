@@ -19,14 +19,16 @@ export class DataSource {
             var httpsReference = firebase.storage().refFromURL(this.file+'?cors');
             var that = this;
             var xhr = new XMLHttpRequest();
-            xhr.responseType = 'text';
-            xhr.onload = function(event) {
+            //async case
+            //  xhr.responseType = 'text';
+            /*  xhr.onload = function(event) {
                 //that["result"] = xhr.response;  
                 //debugger;              
                 callback(xhr.response);
-            };
-            xhr.open('GET', this.file);
-            xhr.send();              
+            };*/
+            xhr.open('GET', this.file,false); //sync call
+            xhr.send();      
+            callback(xhr.responseText);        
         }
     }
     public get(){

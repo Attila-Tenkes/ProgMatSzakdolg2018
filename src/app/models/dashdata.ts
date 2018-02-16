@@ -12,7 +12,7 @@ export class RawDashData {
         public domId?: string;        
         public isHighlighted?: boolean;//is current node selected       
         public widget?: Widget;  
-        public cells?:RawDashData[];
+        public cells?:RawDashData[];       
     constructor();
     constructor( name?: string,
         description?: string,       
@@ -36,7 +36,8 @@ export class RawDashData {
            this.description = json.description?json.description:'';
            this.customCss = json.customCss?json.customCss:'';                     
            this.domId = json.domId?json.domId:'';
-           this.widget = WidgetFact.createWidget(json, dataService, context);   
+           this.widget = WidgetFact.createWidget(json, dataService, context); 
+           
            if (json.DependencyPropertyName){this.widget["DependencyPropertyName"] = json.DependencyPropertyName;}
            if (json.DependencyPropertyExpression){this.widget["DependencyPropertyExpression"] = json.DependencyPropertyExpression;}   
            if (json.keyAttr){this.widget["keyAttr"] = json.keyAttr;}
@@ -48,6 +49,10 @@ export class RawDashData {
                 let x:RawDashData = new RawDashData();
                 this.cells.push(x.fromJSON(json.cells[i], dataService,context));              
             }
+            //sort cells
+            this.cells = this.cells.sort(function(a, b) {
+                return a.widget.visibleOrder - b.widget.visibleOrder;
+              })
            }  
            return this;     
     }  
@@ -62,6 +67,7 @@ export class RawDashData {
             width:this.widget.width,
             title:this.widget.title,
             cells:[],
+            visibleOrder:this.widget.visibleOrder
           };
 //todo ezt az if-ezest  oop-san kene megcsinalni
             if ( this.widget instanceof Container){
@@ -169,7 +175,17 @@ export class DecoratedDashData{
     {
         return this.lookupNode(this._rawData,perdicate);
     }
-    
+    sortChildren(node:RawDashData)
+    {
+        debugger;
+        //var node = this.lookupNode(this._rawData, x=>x.domId == itemToMove);
+        if (node){
+            var parent = this.lookupParentNode(this._rawData, this._rawData, node.domId);                       
+            parent.cells = parent.cells.sort(function(a, b) {
+                return a.widget.visibleOrder - b.widget.visibleOrder;
+              });            
+        }
+    }
     add(parentDomId:string, props:any):RawDashData{		
         debugger;
         var parentNode = this.lookupNode(this._rawData,x=>x.domId == parentDomId );
@@ -180,7 +196,8 @@ export class DecoratedDashData{
             }
             let newControl = new RawDashData();
             newControl.domId = Helpers.NextID();
-            newControl.widget = WidgetFact.createWidget({type:props.type}, this.dataService)
+            newControl.widget = WidgetFact.createWidget({type:props.type}, this.dataService);
+            newControl.widget.visibleOrder = parentNode.cells.length;
             parentNode.cells.push(newControl )	;
             return  newControl;
         }				

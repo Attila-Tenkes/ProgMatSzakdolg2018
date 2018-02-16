@@ -59,7 +59,7 @@ _me:DesignerComponent;
     ngOnInit(){
        this.theUser = this.userSVC.loggedInUser;
        let dashboardId = this.route.snapshot.params['id'];
-       // debugger;
+       debugger;
        var that =this;
        
       // let raw =this.designerSVC.get(dashboardId);
@@ -113,7 +113,7 @@ _me:DesignerComponent;
             accept: ".dbWidget",
             
             drop: function( event:any, ui:any ) {
-              //  debugger;
+                debugger;
                if (!ui.draggable.attr('DoNothing')){ 
                     var draggableId = ui.draggable.attr('domId');
                     var droppableId = $(this).attr("domId");	
