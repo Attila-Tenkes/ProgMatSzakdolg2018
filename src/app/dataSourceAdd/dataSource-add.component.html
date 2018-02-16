@@ -1,0 +1,97 @@
+<div class="row">
+    <div class="small-12 medium-6 columns">
+        <h1>Create a new Data Source</h1>
+    </div>
+</div>
+
+<form>
+    <div class="row">
+        <div class="small-12 medium-6 columns">
+            <label>Data Source Name
+            <input type="text" [(ngModel)]="name" name="prodName" required #prName="ngModel" >
+            </label>
+        </div>
+    </div>
+    <div class="row">
+        <div class="small-12 medium-6 columns"> 
+            <label>
+                Description
+                <textarea rows="5" id="desc" [(ngModel)]="description" name="prodDesc" 
+                    required #prDesc="ngModel"></textarea>
+            </label>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="small-12 medium-6 columns">
+            <label>Data source type                                
+                <select [(ngModel)]="typename"  name="typename" required #prTypeName="ngModel">
+                    <option value ='csv' >CSV</option>
+                    <option value ='ftp' >Ftp</option>
+                    <option value ='webservice'>Webservice</option>
+                </select>
+            </label>
+        </div>
+    </div>
+                          
+    <ng-container *ngIf="typename=='csv';then csvContent else otherContent"> </ng-container>
+    <ng-template #csvContent>
+        <div class="row">
+            <div class="small-12 medium-6 columns">
+                <label>Csv File
+                    <select [(ngModel)]="fileUrl" name="fileUrl" (ngModelChange)="onFileDDLChange($event)">                        
+                        <option [ngValue]="i.url" *ngFor="let i of theFiles">{{i.name}}</option>
+                    </select>
+                </label>
+              
+            </div>
+            <div class="row">
+                <div class="small-12 medium-6 columns">
+                    <label>Seaprator
+                        <input type="text" [(ngModel)]="csvSeparator" name="separator" >
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="small-12 medium-6 columns">
+                    <label>Number of header rows
+                    <input type="text" [(ngModel)]="csvSkip" name="Header Rows"   >
+                    </label>
+                </div>
+            </div>
+        </div> 
+    </ng-template> 
+    <ng-template #otherContent>
+        <div class="small-12 medium-6 columns">
+            <label>Service Url
+                <input type="text" [(ngModel)]="webServiceUrl" name="webServiceUrl" >
+            </label>
+        </div>
+        <div class="row">
+            <div class="small-12 medium-6 columns">
+                <label>User Name
+                <input type="text" [(ngModel)]="user" name="user" required  >
+                </label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12 medium-6 columns">
+                <label>Pwd
+                <input type="password" [(ngModel)]="pwd" name="pwd" required >
+                </label>
+            </div>
+        </div>
+    </ng-template>                
+                
+
+
+    <div class="row align-center">
+        <div class="small-12 columns">
+            <div class="expanded button-group">
+            <button class="success button " type="button" [disabled]="!prName.valid || !prDesc.valid" 
+                (click)="createDataSource()">Create Data Source</button>
+                <button class="cancel button" type="button" (click)="cancel()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+</form>

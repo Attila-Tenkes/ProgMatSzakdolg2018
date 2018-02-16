@@ -1,0 +1,94 @@
+<navi-bar></navi-bar>
+<div class="top-bar">
+    
+
+    <div class="top-bar-left">
+        <ul class="menu">           
+            <li class="admin-menu"><a (click)="chooseMode('add')">Add File</a></li>
+        </ul>
+    </div>
+</div>
+
+<div [ngSwitch]="menuChoice">
+    <div *ngSwitchCase="'add'"><file-editor></file-editor></div>
+    <div *ngSwitchDefault>
+
+        <div *ngIf = "formDisplay" class="row">
+            <div class="row" *ngFor="let file of theFiles">
+
+                <div class="row spacer">
+	                <div class="media-object">
+		                <div class="media-object-section">
+        		            <div class="align-self-middle">
+                		        <img class="mini-img" [src]= "file.url">
+                 	        </div>
+              	        </div>
+                        <div class="media-object-section main-section">
+                            <h4>{{file.name}}</h4>
+                            <p>{{file.description | truncate:140}}</p>
+                          
+                            <div class="button-group align-center">
+                                <a class="button" (click)="editFile(file)" >Edit</a>
+                                <a class="button alert" (click)="deleteFile(file)">Delete</a>
+                            </div>
+                        </div>
+
+   	                </div>
+                </div>   
+
+            </div>
+        </div>
+
+        <div *ngIf = "!formDisplay" class="row">            
+            <form >
+                <div class="row">
+        	        <div class="medium-12 columns"><h3>Edit File</h3></div>
+                </div>
+
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <label>File Name
+                            <input type="text" [(ngModel)]="singleFile.name" 
+                                name="editName" required #prName="ngModel">
+                        </label>
+                    </div>
+                </div>
+               
+
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <label>Description
+                            <textarea rows="5" id="desc" [(ngModel)]="singleFile.description" 
+                                name="editDesc" required #prDesc="ngModel"></textarea>
+                        </label>
+                    </div>
+                    <div class="small-12 medium-6 columns">
+                        <img [src] = "singleFile.img" alt="Image preview...">
+                    </div>
+                </div>
+
+                  <div class="row align-center">
+                    <div class="small-12 columns">
+                        <div class="expanded button-group">
+    <button class="success button " type="button" [disabled]="!prName.valid ||!prDesc.valid" 
+        (click)="updateFile(singleFile)">Update File</button>
+    <button class="cancel button" type="button" (click)="cancelEdit()">Cancel Edit</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div>

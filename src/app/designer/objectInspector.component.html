@@ -1,0 +1,42 @@
+ 
+    <ng-container *ngIf="root.selected"> 
+        <table>
+        <!--<ng-container *ngFor="let prop of getProperties()"> 
+            <tr>
+                <td>{{prop}} </td>                         
+                <td><input type="text" [(ngModel)]="root.root().selected[prop]" ></td>
+            </tr>
+        </ng-container>-->
+        <ng-container *ngFor="let prop of getWidgetProperties()">
+            <tr>
+                <td>{{prop}} </td>   
+                <td>
+                    <div ngSwitch="{{prop}}"> 
+                        <div *ngSwitchCase="'imgSrc'">
+                            <select [ngModel]="root.selected.widget[prop]" (ngModelChange)="onImageDDLChange($event)">                        
+                                <option [ngValue]="i.url" *ngFor="let i of theImageFiles">{{i.name}}</option>
+                            </select>
+                        </div> 
+                        <div *ngSwitchCase="'dataSourceID'">
+                            <select [ngModel]="root.selected.widget[prop]" (ngModelChange)="onDataSourceDDLChange($event)">                        
+                                <option [ngValue]="ds.id" *ngFor="let ds of theDataSources">{{ds.name}}</option>
+                            </select>
+                        </div> 
+                        <div *ngSwitchCase="'DependencyPropertyName'">
+                            <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey($event)">                         
+                        </div> 
+                        <div *ngSwitchCase="'DependencyPropertyExpression'">
+                            <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey2($event)">                         
+                        </div> 
+                        <div *ngSwitchDefault>
+                            <input type="text" [(ngModel)]="root.selected.widget[prop]" >                         
+                        </div>  
+                    </div>                                                 
+                </td>
+            </tr>
+        </ng-container>  
+        <!--<a class="button" (click)="closePropertyEditor()">Close</a>   -->
+        <a class="button alert" (click)="deleteControl(root.selected)">Delete</a>   
+
+        </table>
+    </ng-container> 

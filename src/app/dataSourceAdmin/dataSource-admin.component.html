@@ -1,0 +1,140 @@
+<navi-bar></navi-bar>
+<div class="top-bar">
+    
+
+    <div class="top-bar-left">
+        <ul class="menu">           
+            <li class="admin-menu"><a (click)="chooseMode('add')">Add Data Source</a></li>
+        </ul>
+    </div>
+</div>
+
+<div [ngSwitch]="menuChoice">
+    <div *ngSwitchCase="'add'"><dataSource-editor></dataSource-editor></div>
+    <div *ngSwitchDefault>
+
+        <div *ngIf = "formDisplay" class="row">
+            <div class="row" *ngFor="let con of theDataSources">
+                <div class="row spacer">
+	                <div class="media-object">		                
+                        <div class="media-object-section main-section">
+                            <h4>{{con.name}}</h4>
+                            <p>{{con.description | truncate:140}}</p>                           
+                            <div class="button-group align-center">
+                                <a class="button" (click)="editDataSource(con)" >Edit</a>
+                                <a class="button alert" (click)="deleteDataSource(con)">Delete</a>
+                            </div>
+                        </div>
+
+   	                </div>
+                </div>   
+
+            </div>
+        </div>
+
+        <div *ngIf = "!formDisplay" class="row">            
+            <form >
+                <div class="row">
+        	        <div class="medium-12 columns"><h3>Edit Data Source</h3></div>
+                </div>
+
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <label>Data source Name
+                            <input type="text" [(ngModel)]="singleDataSource.name" 
+                                name="editName" required #prName="ngModel">
+                        </label>
+                    </div>
+                </div>            
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <label>Description
+                            <textarea rows="5" id="desc" [(ngModel)]="singleDataSource.description" 
+                                name="editDesc" required #prDesc="ngModel"></textarea>
+                        </label>
+                    </div>                   
+                </div>
+                <div class="row">
+                        <div class="small-12 medium-6 columns">
+                            <label>Data source type                                
+                                <select [(ngModel)]="singleDataSource.typename"  name="typename" required #prTypeName="ngModel">
+                                    <option value ='csv' >CSV</option>
+                                    <option value ='ftp' >Ftp</option>
+                                    <option value ='webservice'>Webservice</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                                        
+                    <ng-container *ngIf="singleDataSource.typename=='csv';then csvContent else otherContent"> </ng-container>
+                    <ng-template #csvContent>
+                        <div class="row">
+                            <div class="small-12 medium-6 columns">
+                                <label>Csv File
+                                    <select [(ngModel)]="singleDataSource.file" name="fileUrl" (ngModelChange)="onFileDDLChange($event)">                        
+                                        <option [ngValue]="i.url" *ngFor="let i of theFiles">{{i.name}}</option>
+                                    </select>
+                                </label>
+                            </div>
+                        </div> 
+                        <div class="row">
+                            <div class="small-12 medium-6 columns">
+                                <label>Seaprator
+                                    <input type="text" [(ngModel)]="singleDataSource.csvSeparator" name="separator" >
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-12 medium-6 columns">
+                                <label>Number of header rows
+                                <input type="text" [(ngModel)]="singleDataSource.csvSkip" name="Header Rows"   >
+                                </label>
+                            </div>
+                        </div>
+                    </ng-template> 
+                    <ng-template #otherContent>
+                        <div class="small-12 medium-6 columns">
+                            <label>Service Url
+                                <input type="text" [(ngModel)]="singleDataSource.url" name="webServiceUrl" >
+                            </label>
+                        </div>
+                        <div class="row">
+                            <div class="small-12 medium-6 columns">
+                                <label>User Name
+                                <input type="text" [(ngModel)]="singleDataSource.user" name="user"   >
+                                </label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="small-12 medium-6 columns">
+                                <label>Pwd
+                                <input type="password" [(ngModel)]="singleDataSource.pwd" name="pwd"  >
+                                </label>
+                            </div>
+                        </div>
+                    </ng-template>  
+                  <div class="row align-center">
+                    <div class="small-12 columns">
+                        <div class="expanded button-group">
+                            <button class="success button " type="button" [disabled]="!prName.valid  ||!prDesc.valid" 
+                                (click)="updateDataSource(singleDataSource)">Update</button>
+                            <button class="cancel button" type="button" (click)="cancelEdit()">Cancel Edit</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+
+
+
+
+
+
+    </div>
+
+</div>

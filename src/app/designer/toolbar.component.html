@@ -1,0 +1,9 @@
+
+<ng-container div *ngFor="let widget of widgets">     
+    <div class="draggable ui-widget-content dbWidget"  [attr.data-ctlType]="widget.typename"
+    (click)="onItemClicked($event, widget)" (dragstart)="onDrag($event, widget)"> 
+        {{widget.typename}} <img [src]="widget.icon(0)" alt="{{widget.typename}}"/>
+    </div>
+</ng-container>
+
+<!--<a class="button" (click)="closeToolbar()">Close</a>  -->

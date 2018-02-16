@@ -1,0 +1,63 @@
+ <ng-template  #recursiveList let-node="node"  let-parent="parent" let-root="root">           
+        <div (click)="selectItem($event, node)" [class]="css(node, parent)" [attr.domId]="domID(node)"
+        (contextmenu)="contextMenu($event, node)">
+                <!--<p>{{domID(node)}}<br/>  </p>-->
+                        <ng-container *ngIf="node.widget">
+                         {{node.widget.title}}                          
+                        <div *ngIf="node.widget.isReady();then widgetContent else widgetPlaceholder"></div>                          
+                                <ng-template #widgetContent>
+                                        <div *ngIf="isFusionChart(node.widget)">
+                                                <fusioncharts
+                                                        width="{{node.width}}"
+                                                        height="{{node.height}}"
+                                                        type="{{node.widget._fcType}}"
+                                                        dataFormat="JSON"
+                                                        [dataSource]="node.widget._dataSource"
+                                                        [events]="events">                                                
+                                                </fusioncharts> 
+                                        </div>
+                                        <div *ngIf="isTable(node.widget)">
+                                                <!-- todo table control -->
+                                                <dx-data-grid  
+                                                        [dataSource]="node.widget._dataSource.rows"
+                                                     
+                                                     >   
+                                                </dx-data-grid>
+                                        </div>
+                                        <div *ngIf="isKPI(node.widget)">
+                                                <!-- todo KPI control -->
+                                                KPI
+                                        </div>
+                                        <div *ngIf="isDatePicker(node.widget)">
+                                                <!-- todo KPI control -->
+                                                 <dx-date-box
+                                                     (onValueChanged)="onDateChanged($event, node.widget)"   >
+                                                </dx-date-box>
+                                        </div>
+                                        
+                                        <div *ngIf="isImage(node.widget)">
+                                                <img class="mini-img" [src]= "node.widget.imgSrc">                                                 
+                                        </div>
+                                       
+                                </ng-template>
+                                <ng-template #widgetPlaceholder> 
+                                        <!--type:  {{node.widget.typename}} -->
+                                        <div *ngIf="!isContainer(node.widget)">
+                                                <img [src]="node.widget.icon(1)" alt="{{node.widget.typename}}"/>  
+                                        </div>
+                                </ng-template>                                                                                                 
+                        </ng-container>
+               
+      
+                
+                <ng-container *ngIf="node.cells">
+                        <ng-container *ngFor="let child of node.cells">                             
+                                <ng-container *ngTemplateOutlet="recursiveList; context:{ node: child, parent:node, root:root }"></ng-container>
+                        </ng-container>                        
+                </ng-container>   
+                 <p *ngIf="isContainer(node.widget)  && node.widget.direction=='horizontal'"  class="clearfix"></p>                               
+        </div>
+</ng-template>
+
+<ng-container *ngTemplateOutlet="recursiveList;context:{node:node,parent:parent,root:root}">
+</ng-container>

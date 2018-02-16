@@ -1,0 +1,88 @@
+
+<navi-bar></navi-bar>
+<div>
+    <div>   
+        <button (click)="preview()">Preview</button>
+         <button (click)="save()">SAVE</button>         
+          
+        <dx-button text="Open toolbar" (onClick)="showHideToolbar(true)"></dx-button>
+        <dx-button text="Open explorer" (onClick)="showHideExplorer(true)"></dx-button>
+    </div>
+    
+    <ng-container *ngIf="_root">                                                  
+        <div  id='dbEditor'>        
+            <ctlEditor [node]="_root" [root]="_data" [parent]="_root" ></ctlEditor>        
+        </div> 
+
+       <!-- <div id="dbToolbar">
+            <ctlToolbar [node]="_root" [root]="_data"> </ctlToolbar>
+        </div>-->
+    <dx-popup
+        class="popup"
+        [width]="500"       
+        [showTitle]="true"
+        title="Toolbar"
+        [shading]="false"
+        [dragEnabled]="true"
+        [closeOnOutsideClick]="false"
+        [(visible)]="isToolbarPopupVisible"        
+        (onTitleRendered)="doTheMagic()">
+        <div *dxTemplate="let data of 'content'">
+            <p>
+             <ctlToolbar [node]="_root" [root]="_data"> </ctlToolbar>
+             <dx-button text="Close" (onClick)="showHideToolbar(false)"></dx-button>
+            </p>
+        </div>
+    </dx-popup>
+
+
+
+    <dx-popup
+        class="popup"
+        [width]="500"       
+        [showTitle]="true"
+        title="Object Inspector"
+        [shading]="false"
+        [dragEnabled]="true"
+        [closeOnOutsideClick]="false"
+        [(visible)]="isInspectorPopupVisible">
+        <div *dxTemplate="let data of 'content'">
+            <p>
+              <ctlObjectInspector  [node]="_root" [root]="_data"> </ctlObjectInspector>
+              <dx-button text="Close" (onClick)="showHideInspector(false)"></dx-button>
+            </p>
+        </div>
+    </dx-popup>
+
+
+     <dx-popup
+        class="popup"
+        [width]="500"              
+        [showTitle]="true"
+        title="Object Explorer"
+        [shading]="false"
+        [dragEnabled]="true"
+        [closeOnOutsideClick]="false"
+        [(visible)]="isExplorerPopupVisible">
+        <div *dxTemplate="let data of 'content'">
+            <p>
+               <ctlExplorer [node]="_root" [root]="_data" [designer]="_me"> </ctlExplorer>
+               <dx-button text="Close" (onClick)="showHideExplorer(false)"></dx-button>
+            </p>
+        </div>
+    </dx-popup>
+       <!-- <div id='dbObjExplorer' style="width: 300px;">	
+            <ctlExplorer [node]="_root" [root]="_data"> </ctlExplorer>
+            <a class="button" (click)="closeExplorer()">Close</a>  
+        </div>-->
+
+       <!-- <div id='dbObjInspector'>
+            <ctlObjectInspector  [node]="_root" [root]="_data"> </ctlObjectInspector>
+        </div>-->
+
+
+
+
+    </ng-container>
+</div>
+    

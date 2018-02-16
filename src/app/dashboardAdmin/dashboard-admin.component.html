@@ -1,0 +1,118 @@
+<navi-bar></navi-bar>
+<div class="top-bar">
+    
+
+    <div class="top-bar-left">
+        <ul class="menu">           
+            <li class="admin-menu"><a (click)="chooseMode('add')">Add Dashboard</a></li>
+        </ul>
+    </div>
+</div>
+<dx-popup
+        class="popup"
+        [width]="300"       
+        [showTitle]="true"
+        title="Share"
+        [shading]="true"
+        [dragEnabled]="false"
+        [closeOnOutsideClick]="false"
+        [(visible)]="isUserPopupVisible">
+        <div *dxTemplate="let data of 'content'">
+            {{singleDashboard.name}}
+            <!--[height]="400"-->
+            <p>
+               <dx-list #list
+                [dataSource]="allUsersExceptLoggedIn"                                               
+                [selectionMode]="all"
+                [selectAllMode]="allPages"                
+                [showSelectionControls]="true"
+                [(selectedItemKeys)]="selectedItems">
+                    <div *dxTemplate="let data of 'item'">
+                        {{data.name}}
+                    </div>
+                </dx-list>              
+            </p>  
+              <span>{{selectedItems.join(", ")}}</span>
+            <dx-button text="Share" (onClick)="shareDashboard(singleDashboard)"></dx-button>
+            <dx-button text="Cancel" (onClick)="ShowHidePopup(false)"></dx-button>
+        </div>
+</dx-popup>
+
+<div [ngSwitch]="menuChoice">
+    <div *ngSwitchCase="'add'"><dashboard-editor></dashboard-editor></div>
+    <div *ngSwitchDefault>
+
+        <div *ngIf = "formDisplay" class="row">
+            <div class="row" *ngFor="let dash of theDashboards">
+                <div class="row spacer">
+	                <div class="media-object">
+		                
+                        <div class="media-object-section main-section">
+                            <h4>{{dash.name}}</h4>
+                            <p>{{dash.description | truncate:140}}</p>                           
+                            <div class="button-group align-center">
+                                {{dash.readOnly}}
+                                <div *ngIf="!dash.readOnly">
+                                <a class="button" (click)="designDashboard(dash)" >Design</a>
+                                <a class="button" (click)="editDashboard(dash)" >Edit</a>
+                              
+                                <dx-button text="Share" (onClick)="ShowHidePopup(true, dash)"></dx-button>
+                                
+                                       
+                                
+                                <a class="button alert" (click)="deleteDashboard(dash)">Delete</a>
+                                </div>
+                                <a class="button" (click)="designDashboard(dash)" >View</a>
+                            </div>
+                        </div>
+
+   	                </div>
+                </div>   
+
+            </div>
+        </div>
+
+        <div *ngIf = "!formDisplay" class="row">
+            
+            <form >
+                <div class="row">
+        	        <div class="medium-12 columns"><h3>Edit Dashboard meta</h3></div>
+                </div>
+
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <label>Data Source Name
+                            <input type="text" [(ngModel)]="singleDashboard.name" 
+                                name="editName" required #prName="ngModel">
+                        </label>
+                    </div>
+                </div>
+            
+
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <label>Description
+                            <textarea rows="5" id="desc" [(ngModel)]="singleDashboard.description" 
+                                name="editDesc" required #prDesc="ngModel"></textarea>
+                        </label>
+                    </div>
+                   
+                </div>
+
+                  <div class="row align-center">
+                    <div class="small-12 columns">
+                        <div class="expanded button-group">
+    <button class="success button " type="button" [disabled]="!prName.valid  ||!prDesc.valid" 
+        (click)="updateDashboard(singleDashboard)">Update</button>
+    <button class="cancel button" type="button" (click)="cancelEdit()">Cancel Edit</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>

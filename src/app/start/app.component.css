@@ -1,0 +1,58 @@
+.cellTitle{
+	width:auto;
+}
+.readOnly
+{
+	background-color: #cccccc;
+}
+.hightlightObj{
+	border:2px solid #08af2d !important;
+}
+.tdCell{
+	border:dotted #C83232 1px;
+	padding:1px;
+	margin:1px;
+	width:auto;
+	float:left;
+	min-height:20px;
+	min-width:100px;
+}
+.tdRow{
+	border:dashed #32C832 1px;
+	padding:5px;
+	margin:1px;
+	width:auto;	
+	min-height:20px;
+}
+.navItem{
+}
+.designer{
+	border:solid grey 1px;
+	padding:1px;
+	/*width: 1000px;*/
+}
+
+.draggable{
+	cursor: pointer;
+}
+.bold{
+	font-weight:bold;
+}
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.ui-state-hover{
+	border:2px red dashed;
+}
+
+.chart{
+	background-color:#888888;
+}
+
+
+#dbObjInspector{
+    width:400px;
+}
