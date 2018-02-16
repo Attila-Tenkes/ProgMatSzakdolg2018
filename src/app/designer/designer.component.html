@@ -1,13 +1,21 @@
 
 <navi-bar></navi-bar>
-<div>
-    <div>   
-        <button (click)="preview()">Preview</button>
-         <button (click)="save()">SAVE</button>         
-          
-        <dx-button text="Open toolbar" (onClick)="showHideToolbar(true)"></dx-button>
-        <dx-button text="Open explorer" (onClick)="showHideExplorer(true)"></dx-button>
-    </div>
+<div class="container"> 
+        <ng-container *ngIf="!_data.meta.readOnly"> 
+            <ng-container *ngIf="_mode=='Viewer'"> 
+                    <div>                              
+                        <dx-button class="button success" (onClick)="design()" text="Design"></dx-button>                    
+                    </div>                    
+            </ng-container>
+            <ng-container *ngIf="_mode!='Viewer'"> 
+                    <div>   
+                        <dx-button class="button success" (onClick)="preview()" text="Preview"></dx-button>
+                        <dx-button class="button primary" (onClick)="save()" text="Save Changes"></dx-button>         
+                        <dx-button class="button secondary" (onClick)="showHideToolbar(true)" text="Open toolbar"></dx-button>
+                        <dx-button class="button secondary" (onClick)="showHideExplorer(true)" text="Open explorer"></dx-button>
+                    </div>
+            </ng-container>
+        </ng-container>
     
     <ng-container *ngIf="_root">                                                  
         <div  id='dbEditor'>        
@@ -27,15 +35,11 @@
         [closeOnOutsideClick]="false"
         [(visible)]="isToolbarPopupVisible"        
         (onTitleRendered)="doTheMagic()">
-        <div *dxTemplate="let data of 'content'">
-            <p>
-             <ctlToolbar [node]="_root" [root]="_data"> </ctlToolbar>
-             <dx-button text="Close" (onClick)="showHideToolbar(false)"></dx-button>
-            </p>
+        <div *dxTemplate="let data of 'content'">            
+            <ctlToolbar [node]="_root" [root]="_data"> </ctlToolbar>
+            <dx-button text="Close" (onClick)="showHideToolbar(false)" class="button secondary"></dx-button>            
         </div>
     </dx-popup>
-
-
 
     <dx-popup
         class="popup"
@@ -45,7 +49,8 @@
         [shading]="false"
         [dragEnabled]="true"
         [closeOnOutsideClick]="false"
-        [(visible)]="isInspectorPopupVisible">
+        [(visible)]="isInspectorPopupVisible"
+        [height]="930">
         <div *dxTemplate="let data of 'content'">
             <dx-scroll-view #scrollView
                 id="scrollviewInsp"
@@ -54,12 +59,11 @@
                 [showScrollbar]="scrollbarMode"
                 [bounceEnabled]="pullDown"
                 reachBottomText="Updating..."
-               >
-                <p>
-                <ctlObjectInspector  [node]="_root" [root]="_data"> </ctlObjectInspector>
-                <dx-button text="Close" (onClick)="showHideInspector(false)"></dx-button>
-                </p>
+                [height]="800"
+               >               
+                <ctlObjectInspector  [node]="_root" [root]="_data"> </ctlObjectInspector>                        
             </dx-scroll-view>
+            <dx-button text="Close" (onClick)="showHideInspector(false)"  class="button secondary"></dx-button>
         </div>
     </dx-popup>
 
@@ -72,9 +76,8 @@
         [shading]="false"
         [dragEnabled]="true"
         [closeOnOutsideClick]="false"
-        [(visible)]="isExplorerPopupVisible">
-
-        
+        [(visible)]="isExplorerPopupVisible"
+        [height]="930">        
         <div *dxTemplate="let data of 'content'">
             <dx-scroll-view #scrollView
                 id="scrollviewExp"
@@ -83,12 +86,11 @@
                 [showScrollbar]="scrollbarMode"
                 [bounceEnabled]="pullDown"
                 reachBottomText="Updating..."
-               >
-                <p>
-                <ctlExplorer [node]="_root" [root]="_data" [designer]="_me"> </ctlExplorer>
-                <dx-button text="Close" (onClick)="showHideExplorer(false)"></dx-button>
-                </p>
+                [height]="800"
+               >            
+                <ctlExplorer [node]="_root" [root]="_data" [designer]="_me"> </ctlExplorer>                                
             </dx-scroll-view>
+            <dx-button text="Close" (onClick)="showHideExplorer(false)"  class="button secondary"></dx-button>
         </div>
     </dx-popup>
        <!-- <div id='dbObjExplorer' style="width: 300px;">	

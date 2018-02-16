@@ -50,7 +50,8 @@ export class UIDesignerService {
                 alert(`failed upload: ${error}`);
             });
     }
-    get(id:string, context?:any):Promise<RawDashData>{
+    /*obsolete: */
+    getRawDash(id:string, context?:any):Promise<RawDashData>{
         let result = new RawDashData();       
                
         let dbRef = this.getUserObjRef();
@@ -58,13 +59,33 @@ export class UIDesignerService {
             let promise =  new Promise<RawDashData>((resolve,reject)=>{
                 dbRef.child(id).once('value')
                 .then((snapshot)=> {
+                    //let x.meta= result.fromJSON(snapshot.val().raw, this, context);
                 let x= result.fromJSON(snapshot.val().raw, this, context);
                 resolve(x);
                 });
             });           
             return promise;  
             //return result.fromJSON(raw, this);                         
-    }   
+    } 
+     
+    getDash(id:string, context?:any):Promise<DecoratedDashData>{
+        let raw = new RawDashData(); 
+        let meta = new DashMeta('','',false,id);      
+               
+        let dbRef = this.getUserObjRef();       
+        let promise =  new Promise<DecoratedDashData>((resolve,reject)=>{
+            dbRef.child(id).once('value')
+            .then((snapshot)=> {
+                meta.name = snapshot.val().name;
+                meta.readOnly = snapshot.val().readOnly;
+                meta.description = snapshot.val().desc;
+            raw = raw.fromJSON(snapshot.val().raw, this, context);
+            let x = new DecoratedDashData(meta, raw, this);
+            resolve(x);
+            });
+        });           
+        return promise;                                   
+    }
 
     editDashDesc(dbDesc: RawDashData){
       /*  let dbRef = firebase.database().ref('products/').child(update.id)
@@ -414,7 +435,7 @@ export class UIDesignerService {
                     height : 100,          
                     title : "Empty dashboard",
                     type : "Container",
-                    direction : "vertical"          
+                    orientation : "vertical"          
                 }
             });         
             //todo error handling        

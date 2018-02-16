@@ -1,6 +1,6 @@
 <div class="row">
     <div class="small-12 medium-6 columns">
-        <h1>Create a new Dashboard</h1>
+        <h1>Create Dashboard</h1>
     </div>
 </div>
 
@@ -23,10 +23,10 @@
         </div>
     <div class="row align-center">
         <div class="small-12 columns">
-            <div class="expanded button-group">
-                <button class="success button " type="button" [disabled]="!prName.valid || !prDesc.valid" 
-                (click)="createDashboard()">Create Dashboard</button>
-                <button class="cancel button" type="button" (click)="cancel()">Cancel</button>
+            <div class="button-group">
+                <dx-button class="button primary" (onClick)="createDashboard()" [disabled]="!prName.valid || !prDesc.valid" 
+                text="Create Dashboard"></dx-button>
+                <dx-button class="button secondary" (onClick)= "cancel()" text="Cancel"></dx-button>
             </div>
         </div>
     </div>

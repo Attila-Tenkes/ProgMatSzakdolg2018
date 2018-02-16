@@ -22,7 +22,9 @@ export class ObjectInspectorComponent implements AfterViewInit{
     @Input() node: RawDashData;
     @Input() root: DecoratedDashData;
     theImageFiles: DashFile[];
-    theDataSources:DataSource[]
+    theDataSources:DataSource[];
+    theOrientations:string[];
+
     private _parent: DesignerComponent;
     constructor( private designerSVC: UIDesignerService, private userSVC: UserService,  private fileAdminSVC: FileService,
                 private dsSvc:DataSourceService,private zone:NgZone,@Host() parent: DesignerComponent)
@@ -30,7 +32,8 @@ export class ObjectInspectorComponent implements AfterViewInit{
         var that = this;
         this._parent=parent;
         this.fileAdminSVC.getImagesOnce().then(x=>{this.theImageFiles=x;});
-        this.dsSvc.getDataSourcesOnce().then(x=>{this.theDataSources=x;});       
+        this.dsSvc.getDataSourcesOnce().then(x=>{this.theDataSources=x;});      
+        this.theOrientations =['horizontal','vertical'];
     }
 
     onImageDDLChange(selectedImage:any) {
@@ -38,7 +41,11 @@ export class ObjectInspectorComponent implements AfterViewInit{
         //todo type check        
        (<widgets.ImageWidget> this.root.selected.widget).imgSrc = selectedImage;
     }
-
+    onOrientationChange(selectedOrientation:any) {
+        console.log(selectedOrientation);
+        //todo type check        
+       (<widgets.Container> this.root.selected.widget).orientation = selectedOrientation;
+    }
     
     onDataSourceDDLChange(selectedDS:any) {
         console.log(selectedDS);

@@ -71,7 +71,7 @@ export class RawDashData {
           };
 //todo ezt az if-ezest  oop-san kene megcsinalni
             if ( this.widget instanceof Container){
-                result.direction=(<Container>this.widget).direction;
+                result.orientation=(<Container>this.widget).orientation;
             }
             else if ( this.widget instanceof ImageWidget){
                 result.imgSrc=(<ImageWidget>this.widget).imgSrc;
@@ -99,7 +99,7 @@ export class RawDashData {
         return result; 
     }
     showClearfix(){
-        return this.widget instanceof Container && this.widget.direction && this.widget.direction==Constants.HORIZONTAL;
+        return this.widget instanceof Container && this.widget.orientation && this.widget.orientation==Constants.HORIZONTAL;
     } 
 }
 

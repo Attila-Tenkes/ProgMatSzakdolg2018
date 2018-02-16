@@ -8,17 +8,20 @@
 .hightlightObj{
 	border:2px solid #08af2d !important;
 }
-.tdCell{
-	border:dotted #C83232 1px;
-	padding:1px;
+.tdCell-designer{
+	border:dotted #C83232 1px;	
+}
+.tdRow-designer{
+	border:dashed #32C832 1px;	
+}
+.tdCell{	
 	margin:1px;
 	width:auto;
 	float:left;
 	min-height:20px;
 	min-width:100px;
 }
-.tdRow{
-	border:dashed #32C832 1px;
+.tdRow{	
 	padding:5px;
 	margin:1px;
 	width:auto;	
@@ -55,4 +58,9 @@
 
 #dbObjInspector{
     width:400px;
+}
+
+.container{
+	margin:5px;
+	padding:5px;
 }

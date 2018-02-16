@@ -3,10 +3,6 @@
     color: #ffffff;
 }
 
-.admin-menu a {
-    color: #ffffff;
-}
-
 .mini-img {
     height: 100px;
     width: 100px;
@@ -17,3 +13,5 @@
     border-top: solid 1px #000000;
    
 }
+
+.action-bar{}

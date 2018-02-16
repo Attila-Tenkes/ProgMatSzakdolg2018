@@ -1,38 +1,38 @@
 <navi-bar></navi-bar>
-<div class="top-bar">
-    
 
-    <div class="top-bar-left">
-        <ul class="menu">           
-            <li class="admin-menu"><a (click)="chooseMode('add')">Add Data Source</a></li>
-        </ul>
-    </div>
-</div>
 
-<div [ngSwitch]="menuChoice">
+<div [ngSwitch]="menuChoice" class="container">
     <div *ngSwitchCase="'add'"><dataSource-editor></dataSource-editor></div>
     <div *ngSwitchDefault>
 
         <div *ngIf = "formDisplay" class="row">
+            <div class="action-bar">    
+                    <div class="top-bar-left">
+                        <ul class="menu">           
+                            <li class="admin-menu">
+                                <dx-button class="button primary" (onClick)="chooseMode('add')"  text="Add Data Source"></dx-button>                                
+                            </li>
+                        </ul>
+                    </div>
+                </div> 
             <div class="row" *ngFor="let con of theDataSources">
                 <div class="row spacer">
 	                <div class="media-object">		                
                         <div class="media-object-section main-section">
                             <h4>{{con.name}}</h4>
                             <p>{{con.description | truncate:140}}</p>                           
-                            <div class="button-group align-center">
-                                <a class="button" (click)="editDataSource(con)" >Edit</a>
-                                <a class="button alert" (click)="deleteDataSource(con)">Delete</a>
+                            <div class="button-group align-center">                                                            
+                                <dx-button class="button primary" (onClick)="editDataSource(con)"  text="Edit"></dx-button>                                                                
+                                <dx-button class="button alert" (onClick)="deleteDataSource(con)" text="Delete"></dx-button>
                             </div>
                         </div>
-
    	                </div>
                 </div>   
 
             </div>
         </div>
 
-        <div *ngIf = "!formDisplay" class="row">            
+        <div *ngIf = "!formDisplay" class="row">                           
             <form >
                 <div class="row">
         	        <div class="medium-12 columns"><h3>Edit Data Source</h3></div>
@@ -115,10 +115,10 @@
                     </ng-template>  
                   <div class="row align-center">
                     <div class="small-12 columns">
-                        <div class="expanded button-group">
-                            <button class="success button " type="button" [disabled]="!prName.valid  ||!prDesc.valid" 
-                                (click)="updateDataSource(singleDataSource)">Update</button>
-                            <button class="cancel button" type="button" (click)="cancelEdit()">Cancel Edit</button>
+                        <div class="button-group">                            
+                           <dx-button class="button primary" (onClick)="updateDataSource(singleDataSource)" [disabled]="!prName.valid || !prDesc.valid" 
+                                text="Update"></dx-button> 
+                            <dx-button class="button secondary" (onClick)= "cancelEdit()" text="Cancel"></dx-button>
                         </div>
                     </div>
                 </div>

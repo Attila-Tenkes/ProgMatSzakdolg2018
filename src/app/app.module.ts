@@ -29,6 +29,7 @@ import { DashboardAddComponent }    from './dashboardAdd/dashboard-add.component
 import { UIDesignerService } from './services/designer.service';
 
 import { DesignerComponent } from './designer/designer.component';
+//import { ViewerComponent } from './designer/viewer.component';
 import { LayoutDesignerComponent } from './designer/layoutDesigner.component';
 import { ObjectExplorerComponent } from './designer/objectExplorer.component';
 import { ToolbarComponent } from './designer/toolbar.component';
@@ -81,6 +82,7 @@ import { SingleSeriesChartComponent } from './components/singleSeriesChart.compo
         ErrorComponent,
         
         DesignerComponent,
+        //ViewerComponent,
         LayoutDesignerComponent,
         ObjectExplorerComponent,
         ToolbarComponent,

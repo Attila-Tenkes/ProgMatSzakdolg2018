@@ -48,9 +48,12 @@ export class LayoutDesignerComponent {
         this.root.highlightOne(node);
         
         //$("#dbObjInspector").dialog("open");
-         this.designer.showHideInspector(true);
+        this.designer.showHideInspector(true);
         event.preventDefault();
 		event.stopPropagation();
+    }
+    isViewerMode(){
+        return  this.designer &&  this.designer._mode && this.designer._mode=='Viewer';
     }
     isFusionChart(widget:widgets.Widget):boolean{      
        return   widget instanceof widgets.FusionWidget;
@@ -75,25 +78,36 @@ export class LayoutDesignerComponent {
     css(node:RawDashData, parent:RawDashData):string  {
         let result = ' dbWidget ';
         if (node)
-        {
-            if (node.isHighlighted){
-                result+=' hightlightObj';
-            }        
+        {                   
+            //custom css
             let cust= node.customCss==null?'':node.customCss;
-            let widgetCss = node.widget.css();
+            //widget specific
+            let widgetCss = node.widget.css();   
+            let designer = '';   
+            if (this.isViewerMode())
+            {
+                widgetCss=widgetCss.replace('draggable','').replace('droppble','');
+            }
+            else {
+                designer = '-designer';  
+                if (node.isHighlighted){
+                    result+=' hightlightObj';
+                } 
+            }
             result += cust +widgetCss;
             if (parent)
             {
                 if (parent.widget instanceof widgets.Container)
-                {
-                    if ((<widgets.Container>parent.widget).direction &&(<widgets.Container>parent.widget).direction==Constants.HORIZONTAL)
+                {                    
+                    if ((<widgets.Container>parent.widget).orientation &&(<widgets.Container>parent.widget).orientation==Constants.HORIZONTAL)
                     {
-                        result += 'tdCell ';
+                        result += 'tdCell tdCell'+designer + ' ';
                     }
                     else
                     {        
-                        result += 'tdRow ';
+                        result += 'tdRow tdRow'+designer + ' ';
                     }
+
                 }
             }    
         }

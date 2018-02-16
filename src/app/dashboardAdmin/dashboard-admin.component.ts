@@ -91,7 +91,7 @@ export class DashboardAdminComponent implements OnInit {
 
     shareDataSource(update: DashMeta, readers: UserData[]){    
       var db = null;
-      this.designerSVC.get(update.id,this)
+      this.designerSVC.getRawDash(update.id,this)
        .then(raw=>        
             {           
                 debugger;                
@@ -135,6 +135,10 @@ export class DashboardAdminComponent implements OnInit {
         this.router.navigate(['/designer/'+theDashboard.id]);
     }
 
+    viewDashboard(theDashboard: DashMeta){
+        this.router.navigate(['/viewer/'+theDashboard.id]);
+    }
+    
     cancelEdit(){
         this.formDisplay = true;
     }
@@ -152,5 +156,16 @@ export class DashboardAdminComponent implements OnInit {
         } else {
             alert('Nothing deleted!');
         }
-    }     
+    } 
+
+    selectedUsers(){
+        return this.selectedItems.map(function(x){return x.name}).join(", ");
+    }
+
+    shareTitle(){
+        if (this.singleDashboard){
+            return 'Share: ' +this.singleDashboard.name;
+        }
+        else return 'Share';
+    }
 }

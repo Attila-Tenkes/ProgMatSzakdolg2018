@@ -55,7 +55,7 @@
                                 <ng-container *ngTemplateOutlet="recursiveList; context:{ node: child, parent:node, root:root }"></ng-container>
                         </ng-container>                        
                 </ng-container>   
-                 <p *ngIf="isContainer(node.widget)  && node.widget.direction=='horizontal'"  class="clearfix"></p>                               
+                 <p *ngIf="isContainer(node.widget)  && node.widget.orientation=='horizontal'"  class="clearfix"></p>                               
         </div>
 </ng-template>
 

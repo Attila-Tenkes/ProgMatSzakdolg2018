@@ -1,14 +1,15 @@
 <div *ngIf="node">   
         <ul>
         <li (click)="selectItem($event, node)" [class]="css(node)"  [attr.domId]="domID(node)" (contextmenu)="contextMenu($event, node)">
-        <p>{{domID(node)}}</p>
-        <ng-container *ngIf="node.widget">
-                          {{node.widget.title}}: {{node.widget.type}} </ng-container>
-        <div *ngIf="node.cells">
-                <div *ngFor="let child of node.cells">
-                        <ctlExplorer [node]="child" [root]="root" [designer]="designer"></ctlExplorer>
-                    </div>
-        </div>       
+                <p>{{domID(node)}}</p>
+                <ng-container *ngIf="node.widget">
+                                {{node.widget.title}}: {{node.widget.type}} 
+                </ng-container>
+                <div *ngIf="node.cells">
+                        <div *ngFor="let child of node.cells">
+                                <ctlExplorer [node]="child" [root]="root" [designer]="designer"></ctlExplorer>
+                        </div>
+                </div>       
         </li>
         </ul>    
 </div>  

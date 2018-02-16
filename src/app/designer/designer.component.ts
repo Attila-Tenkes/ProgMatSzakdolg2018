@@ -28,6 +28,7 @@ export class DesignerComponent {
     theUser: string;
     _data:DecoratedDashData;
     _root:RawDashData;
+    _mode:string;
     @ViewChild('ctlExplorer') explorer:ElementRef;
     @ViewChild('ctlEditor') layoutEditor:ElementRef;
     @ViewChild(ToolbarComponent) adHost: ToolbarComponent;
@@ -59,11 +60,18 @@ _me:DesignerComponent;
     ngOnInit(){
        this.theUser = this.userSVC.loggedInUser;
        let dashboardId = this.route.snapshot.params['id'];
+       if (this.route.snapshot.data && this.route.snapshot.data.mode && this.route.snapshot.data.mode==='ro'){
+           this._mode = 'Viewer';
+       }
+       else
+       {
+        this._mode = 'Designer';
+       }
        debugger;
        var that =this;
        
       // let raw =this.designerSVC.get(dashboardId);
-       let meta = new DashMeta('ddd','sss',false,dashboardId);
+      // let meta = new DashMeta('ddd','sss',false,dashboardId);
       /* this.designerSVC.getDashMeta(dashboardId)
        .then(x=>        
             {
@@ -73,11 +81,17 @@ _me:DesignerComponent;
             }
        );  */
 
-        this.designerSVC.get(dashboardId,this)
+        this.designerSVC.getDash(dashboardId,this)
        .then(x=>        
             {
-                this._data=new DecoratedDashData(meta, x, this.designerSVC);
+                this._data=x ;//new DecoratedDashData(meta, x, this.designerSVC);
                 this._root = that._data.root();
+                //redirect if it is not owned by the logged in user 
+                if (that._data.meta.readOnly){                    
+                    if (this.route.snapshot.url[0].path!='viewer'){
+                        this.preview(); 
+                    }
+                }
                 this.notify();
                 this.runUi();
             }
@@ -214,7 +228,12 @@ _me:DesignerComponent;
 */
 
     preview(){
-        console.log('Dashboard preview : not implemented');
+        this._mode='Viewer';
+        this.router.navigate(['/viewer/'+this._data.meta.id]);
+    }
+    design(){
+        this._mode='Designer';
+        this.router.navigate(['/designer/'+this._data.meta.id]);
     }
 
 }

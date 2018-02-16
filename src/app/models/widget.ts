@@ -94,10 +94,10 @@ export class ExceptionWidget extends Widget{
 
 export class Container extends Widget{
     constructor(
-         public direction?:string      
+         public orientation?:string      
     ){     
         super('Container',true );
-        if (!direction){this.direction = Constants.HORIZONTAL}
+        if (!orientation){this.orientation = Constants.HORIZONTAL}
     }
 
      css(){
@@ -342,7 +342,7 @@ export class WidgetFact
         
         let result:Widget;
         if(json.type == 'Container'){
-            result= new Container(json.direction);
+            result= new Container(json.orientation);
         }
         else if(json.type == 'DatePicker'){
             result= new DatePicker();

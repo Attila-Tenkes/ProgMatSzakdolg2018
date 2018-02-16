@@ -1,6 +1,6 @@
  
     <ng-container *ngIf="root.selected"> 
-        <a class="button alert" (click)="deleteControl(root.selected)">Delete</a>
+        <a class="button alert" (click)="deleteControl(root.selected)">Remove</a>
         <table>
         <!-- <ng-container *ngFor="let prop of getProperties()"> 
             <tr>
@@ -22,6 +22,11 @@
                 <td>{{prop}} </td>   
                 <td>
                     <div ngSwitch="{{prop}}"> 
+                        <div *ngSwitchCase="'orientation'">
+                            <select [ngModel]="root.selected.widget[prop]" (ngModelChange)="onOrientationChange($event)">                        
+                                <option [ngValue]="ds" *ngFor="let ds of theOrientations">{{ds}}</option>
+                            </select>
+                        </div> 
                         <div *ngSwitchCase="'imgSrc'">
                             <select [ngModel]="root.selected.widget[prop]" (ngModelChange)="onImageDDLChange($event)">                        
                                 <option [ngValue]="i.url" *ngFor="let i of theImageFiles">{{i.name}}</option>
