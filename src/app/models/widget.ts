@@ -18,7 +18,7 @@ export class Widget {
     public _dataSource?: Object;    
     public visibleOrder:number;
     public title: string;
-    public heigth:number=100;
+    public height:number=100;
     public width:number=100;
     public _tag:any;
     constructor(        
@@ -52,9 +52,7 @@ export class Widget {
         }
     } 
 
-    isReady():boolean{return true;}
-
-    
+    isReady():boolean{return true;}    
 }
 export class DataSourcedWidget extends Widget  {    //hack: see layoutdesigner.ts update()
     public dataSourceID: string;
@@ -105,10 +103,16 @@ export class Container extends Widget{
     }    
 }
 
-export class Label extends Widget{
-    constructor( 
-    ){     
+export class Label extends Widget{    
+    public fontSize: string;
+    public fontWeight: string;
+    public fontColor: string;
+    constructor( ){     
         super('Label',true );
+        //set defaults
+        this.fontWeight = 'normal';
+        this.fontSize = '12pt';
+        this.fontColor = '#0a0a0a';
     }
 }
 
@@ -171,13 +175,125 @@ export class GridWidget extends DependencyReceiver  {
 }
 
 export class KPIWidget extends DependencyReceiver {
-    constructor( 
-    ){     
+    public fontSize: string;
+    public fontWeight: string;
+    public fontColor: string;
+    public calculation: string = '';
+    public upperTreshhold:number=1;
+    public upperColor:string='';
+    public lowerTreshhold:number=1;
+    public lowerColor:string='';
+
+    //public keyAttr:string="",
+    public valAttr:string=""
+    public _calcResult:number=0;
+    public _calcColor='#0a0a0a';
+
+    constructor(  protected _chartDataProvider: UIDesignerService,       
+        dataSourceID:string   ){     
         super('KPIWidget',true );
+        //set defaults
+        this.fontWeight = 'normal';
+        this.fontSize = '12pt';
+        this.fontColor = '#0a0a0a';
     }   
+    _isDataReady:boolean;
     notify(x: any):void{
         super.notify(x);
+
+        /*
+        this.load(null, x).then(x=>{
+
+            this._tag.notify();
+        });
+        */
     }
+    
+    load(ds?:DataSource, filter?:any):Promise<any>{         
+        var that =this;        
+        let promise= new Promise<any>((resolve,reject)=>{        
+                let dataSource:DataSource = null;     
+                if (ds!=null){
+                    this.dataSourceID = ds.id;
+                    dataSource=ds;
+
+                    //if (ds !=null)
+                    {
+                    //that._dataSource = this._chartDataProvider.generateChartDataSource(dataSource, that["keyAttr"],that["valAttr"], that.DependencyPropertyName,that.DependencyPropertyExpression);
+                    //todo ide promise kellene
+                    that._isDataReady = true;
+                    
+                    resolve(that._dataSource);
+                    }
+                }
+                else if (this.dataSourceID) 
+                {
+                    var that = this;
+                    this._chartDataProvider.getDsService().get(this.dataSourceID).then(x=>
+                        {
+                            dataSource=x;
+                           // that._dataSource = this._chartDataProvider.generateKPIDataSource(dataSource,that["keyAttr"],that["valAttr"],that.DependencyPropertyName,that.DependencyPropertyExpression,filter);               
+                            that._dataSource = x;
+                           
+                            that._isDataReady = true;  
+                            
+                           ///* var rows:any[] = dataSource.get();
+                            var acc = 0;
+                            var min = 0;
+                            var max = 0;
+                            var cnt =0;
+                            
+                            dataSource.load(function(rows:any){
+                                cnt = rows.length;  
+                                min = rows[0][that.valAttr];  
+                                max = rows[0][that.valAttr];      
+                                for (var i=0;i<rows.length;i++){
+                                    acc += rows[i][that.valAttr];
+                                    if (min>rows[i][that.valAttr]){
+                                        min = rows[i][that.valAttr];
+                                    }
+                                    if (max<rows[i][that.valAttr]){
+                                        max = rows[i][that.valAttr];
+                                    }
+                                }
+
+                                let avg :number = acc/cnt;
+                                if (that.calculation == 'avg'){
+                                    that._calcResult=avg;
+                                }
+                                else if (that.calculation == 'min'){
+                                    that._calcResult=min;
+                                }
+                                else if (that.calculation == 'max'){
+                                    that._calcResult=max;
+                                }
+                                else if (that.calculation == 'cnt'){
+                                    that._calcResult=cnt;
+                                }
+                                if (that._calcResult>that.upperTreshhold){
+                                    that._calcColor = that.upperColor;
+                                }
+                                else if (that._calcResult<that.lowerTreshhold){
+                                    that._calcColor = that.lowerColor;
+                                }
+                                else{                               
+                                    that._calcColor = that.fontColor;
+                                }
+                            });
+
+                            resolve(that._dataSource);                            
+                        }                        
+                    );            
+                }  
+
+            //keyAttr
+            //var valAttr = 'cost';
+               
+         });  
+        console.log('KPI data load');
+        return promise;
+    }
+    isReady():boolean{return this._isDataReady;}
 }
 
 export class DatePicker extends Widget implements IDependencySubject {
@@ -368,7 +484,7 @@ export class WidgetFact
             result=new GridWidget(chartDataProvider);
         }
         else if (json.type == 'KPIWidget'){
-            result=new KPIWidget();
+            result=new KPIWidget(chartDataProvider,  json.dataSourceID);
         }
         else if (json.type == 'ImageWidget'){
             result=new ImageWidget();
@@ -380,7 +496,7 @@ export class WidgetFact
         if (json.dataSourceID){
             (<DataSourcedWidget>result).dataSourceID = json.dataSourceID?json.dataSourceID:'';
         }
-        result.heigth = json.height?json.height:100;
+        result.height = json.height?json.height:100;
         result.width = json.width?json.width:100;        
         result.title =json.title||''; 
         result._tag = context;     

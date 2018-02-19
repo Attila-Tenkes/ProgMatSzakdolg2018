@@ -1,7 +1,8 @@
 {
-  "name": "angular2-webpack-starter",
+  "name": "Dashboard-designer-tool",
   "version": "1.0.0",
-  "description": "A webpack starter for Angular",
+  "description": "Tool allows users to design and share custom dashborad.",
+  "author":"Attila Tenkes, 2017",
   "scripts": {
     "start": "webpack-dev-server --inline --progress --port 8080",
     "test": "karma start",

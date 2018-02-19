@@ -3,7 +3,7 @@
         (contextmenu)="contextMenu($event, node)">
                 <!--<p>{{domID(node)}}<br/>  </p>-->
                         <ng-container *ngIf="node.widget">
-                         {{node.widget.title}}                          
+                                             
                         <div *ngIf="node.widget.isReady();then widgetContent else widgetPlaceholder"></div>                          
                                 <ng-template #widgetContent>
                                         <div *ngIf="isFusionChart(node.widget)">
@@ -15,18 +15,19 @@
                                                         [dataSource]="node.widget._dataSource"
                                                         [events]="events">                                                
                                                 </fusioncharts> 
-                                        </div>
+                                        </div>                                        
                                         <div *ngIf="isTable(node.widget)">
                                                 <!-- todo table control -->
-                                                <dx-data-grid  
-                                                        [dataSource]="node.widget._dataSource.rows"
-                                                     
-                                                     >   
+                                                <dx-data-grid  [dataSource]="node.widget._dataSource.rows">   
                                                 </dx-data-grid>
                                         </div>
+                                        <div *ngIf="isLabel(node.widget)">                                                
+                                                <ctlLabel [widget]="node.widget">   
+                                                </ctlLabel>
+                                        </div>
                                         <div *ngIf="isKPI(node.widget)">
-                                                <!-- todo KPI control -->
-                                                KPI
+                                                <ctlKPI [widget]="node.widget">   
+                                                </ctlKPI>
                                         </div>
                                         <div *ngIf="isDatePicker(node.widget)">
                                                 <!-- todo KPI control -->
@@ -36,7 +37,7 @@
                                         </div>
                                         
                                         <div *ngIf="isImage(node.widget)">
-                                                <img class="mini-img" [src]= "node.widget.imgSrc">                                                 
+                                                <ctlImage  [widget]= "node.widget">   </ctlImage>                                              
                                         </div>
                                        
                                 </ng-template>

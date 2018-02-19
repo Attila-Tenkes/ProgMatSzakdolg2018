@@ -1,6 +1,6 @@
 import { Constants} from '../shared/constants';
 import { Helpers} from '../shared/helpers';
-import { Widget, Container , WidgetFact, ImageWidget,DataSourcedWidget, SingleSeriesFusionWidget} from '../models/widget';
+import { Widget, Container , WidgetFact, ImageWidget,DataSourcedWidget, SingleSeriesFusionWidget, Label, KPIWidget} from '../models/widget';
 import { DashMeta} from '../models/dashmeta';
 import { UIDesignerService } from '../services/designer.service';
 import { DataSourceService } from '../services/dataSource.service';
@@ -41,7 +41,15 @@ export class RawDashData {
            if (json.DependencyPropertyName){this.widget["DependencyPropertyName"] = json.DependencyPropertyName;}
            if (json.DependencyPropertyExpression){this.widget["DependencyPropertyExpression"] = json.DependencyPropertyExpression;}   
            if (json.keyAttr){this.widget["keyAttr"] = json.keyAttr;}
-           if (json.valAttr){this.widget["valAttr"] = json.valAttr;}   
+           if (json.valAttr){this.widget["valAttr"] = json.valAttr;}
+           if (json.fontWeight){this.widget["fontWeight"] = json.fontWeight;}
+           if (json.fontSize){this.widget["fontSize"] = json.fontSize;}      
+           if (json.fontColor){this.widget["fontColor"] = json.fontColor;}
+           if (json.upperTreshhold){this.widget["upperTreshhold"] = json.upperTreshhold;}
+           if (json.upperColor){this.widget["upperColor"] = json.upperColor;}
+           if (json.lowerTreshhold){this.widget["lowerTreshhold"] = json.lowerTreshhold;}      
+           if (json.lowerColor){this.widget["lowerColor"] = json.lowerColor;}
+                      
            this.cells= [];
            if (json.cells)
            {
@@ -63,7 +71,7 @@ export class RawDashData {
             customCss : this.customCss,          
             domId : this.domId,                            
             type:this.widget.typename,
-            height:this.widget.heigth,
+            height:this.widget.height,
             width:this.widget.width,
             title:this.widget.title,
             cells:[],
@@ -76,7 +84,20 @@ export class RawDashData {
             else if ( this.widget instanceof ImageWidget){
                 result.imgSrc=(<ImageWidget>this.widget).imgSrc;
             }
-
+            else if ( this.widget instanceof Label ){
+                result.fontSize=(<Label>this.widget).fontSize;
+                result.fontWeight=(<Label>this.widget).fontWeight;
+                result.fontColor=(<Label>this.widget).fontColor;
+            }
+            else if (this.widget instanceof KPIWidget){
+                result.fontSize=(<KPIWidget>this.widget).fontSize;
+                result.fontWeight=(<KPIWidget>this.widget).fontWeight;
+                result.fontColor=(<KPIWidget>this.widget).fontColor;
+                result.upperTreshhold=(<KPIWidget>this.widget).upperTreshhold;
+                result.upperColor=(<KPIWidget>this.widget).upperColor;
+                result.lowerTreshhold=(<KPIWidget>this.widget).lowerTreshhold;
+                result.lowerColor=(<KPIWidget>this.widget).lowerColor;
+            }
             if ( this.widget instanceof DataSourcedWidget){
                 result.dataSourceID = this.widget.dataSourceID;
             }

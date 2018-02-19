@@ -29,7 +29,9 @@ import { DashboardAddComponent }    from './dashboardAdd/dashboard-add.component
 import { UIDesignerService } from './services/designer.service';
 
 import { DesignerComponent } from './designer/designer.component';
-//import { ViewerComponent } from './designer/viewer.component';
+import { LabelComponent } from './components/label.component';
+import { ImageComponent } from './components/image.component';
+import { KPIComponent } from './components/kpi.component';
 import { LayoutDesignerComponent } from './designer/layoutDesigner.component';
 import { ObjectExplorerComponent } from './designer/objectExplorer.component';
 import { ToolbarComponent } from './designer/toolbar.component';
@@ -87,6 +89,9 @@ import { SingleSeriesChartComponent } from './components/singleSeriesChart.compo
         ObjectExplorerComponent,
         ToolbarComponent,
         ObjectInspectorComponent,
+        LabelComponent,
+        ImageComponent,
+        KPIComponent,
         
         LoginComponent,
         SignUpComponent,

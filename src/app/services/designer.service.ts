@@ -25,7 +25,7 @@ export class UIDesignerService {
             new Pie2D(this, "","",""),
             new GridWidget(this),
             new ImageWidget(),           
-            new KPIWidget(),
+            new KPIWidget(this,""),
             new DatePicker()
             ];
     getAllWidgets(){
@@ -114,33 +114,28 @@ export class UIDesignerService {
         //debugger;  
         if (dataSource.name == "sampleColumn2D"||dataSource.name =="sampleBar2D")
         {
-            return  {
+           
+            //todo  var rows = dataSource.get();
+            var chartData:any =  {
                 "depPropName":depPropName,
                 "depPropExp":depPropExp,
                 "chart": {
                     "caption": "",
                     "subCaption": "",                     
-                },
-                "data": [{
-                    "label": "Bakersfield Central",
-                    "value": "880000",                                       
-                    "key":"1"
-                  
-                }, {
-                    "label": "Garden Groove harbour",
-                    "value": "730000",                    
-                    "key":"2"
-                }, {
-                    "label": "Los Angeles Topanga",
-                    "value": "590000",
-                    "key":"3"
-                }, {
-                    "label": "Compton-Rancho Dom",
-                    "value": "520000",
-                    "key":"4"
+                },                 
+            }; 
+            dataSource.load(function(x:any){
+                chartData.data = [];
+                for (var i=0;i<x.length;i++){
+                    chartData.data.push({                    
+                                        "label": x[i].label,
+                                        "value": x[i].cost,
+                                        "key":x[i].key
+                                    }
+                    );
                 }
-                ]
-            };   
+            });
+            return chartData;  
         }
         else if (dataSource.name == "samplePie2D")
         { 

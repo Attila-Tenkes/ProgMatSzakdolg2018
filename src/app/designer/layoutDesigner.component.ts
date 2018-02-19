@@ -64,7 +64,9 @@ export class LayoutDesignerComponent {
     isTable(widget:widgets.Widget):boolean{      
        return   widget instanceof widgets.GridWidget;
     }
-    
+    isLabel(widget:widgets.Widget):boolean{      
+        return   widget instanceof widgets.Label;
+     }
     isDatePicker(widget:widgets.Widget):boolean{      
        return   widget instanceof widgets.DatePicker;
     }

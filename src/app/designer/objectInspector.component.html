@@ -32,6 +32,7 @@
                                 <option [ngValue]="i.url" *ngFor="let i of theImageFiles">{{i.name}}</option>
                             </select>
                         </div> 
+                        <!--//todo KPI calc properties eseteben ujra kell futtatni a calc-t-->
                         <div *ngSwitchCase="'dataSourceID'">
                             <select [ngModel]="root.selected.widget[prop]" (ngModelChange)="onDataSourceDDLChange($event)">                        
                                 <option [ngValue]="ds.id" *ngFor="let ds of theDataSources">{{ds.name}}</option>

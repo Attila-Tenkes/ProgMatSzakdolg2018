@@ -1,7 +1,7 @@
 
 <navi-bar></navi-bar>
 <div class="container"> 
-        <ng-container *ngIf="!_data.meta.readOnly"> 
+        <ng-container *ngIf="_data && _data.meta && !_data.meta.readOnly"> 
             <ng-container *ngIf="_mode=='Viewer'"> 
                     <div>                              
                         <dx-button class="button success" (onClick)="design()" text="Design"></dx-button>                    

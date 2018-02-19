@@ -91,8 +91,8 @@ export class DataSourceService {
         });         
         return promise; 
     }
-    get(id:string):Promise<DataSource>{    
-        //debugger;   
+    
+    get(id:string):Promise<DataSource>{            
         let dbRef = this.getUserObjRef().child(id); 
         let promise =  new Promise<DataSource>((resolve,reject)=>{          
                 dbRef.once('value')
@@ -112,7 +112,7 @@ export class DataSourceService {
                     );
                     resolve(ds);            
                 });            
-        });         
-        return promise;     
+        }); 
+        return promise;                                  
     }
 }
