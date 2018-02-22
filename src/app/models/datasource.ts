@@ -4,7 +4,8 @@ export class DataSource {
     constructor(
         public name: string,
         public description: string,      
-        public typename:string,          
+        public typename:string, 
+        public format:string,//SingeleSeries, MultiSeries, tabular         
         public id?: string,
         public user?: string,
         public pwd?: string,
@@ -15,27 +16,12 @@ export class DataSource {
     ){}
 
     public load(callback: (a:any)=>any):void{    
-        if (this.name=='sampleBar2D') {
-            var rows= [{
-                "label": "Bakersfield Central",
-                "cost": 880000,                                       
-                "key":"1"
-                
-            }, {
-                "label": "Garden Groove harbour",
-                "cost": 730000,                    
-                "key":"2"
-            }, {
-                "label": "Los Angeles Topanga",
-                "cost": 590000,
-                "key":"3"
-            }, {
-                "label": "Compton-Rancho Dom",
-                "cost": 520000,
-                "key":"4"
-            }
-            ];
-            callback(rows);   
+        if (this.url) {
+            var that = this;
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', this.url,false); //sync call
+            xhr.send();      
+            callback(JSON.parse(xhr.responseText));                  
         } 
         else if (this.file){           
             var httpsReference = firebase.storage().refFromURL(this.file+'?cors');

@@ -20,7 +20,8 @@
 	                <div class="media-object">		                
                         <div class="media-object-section main-section">
                             <h4>{{con.name}}</h4>
-                            <p>{{con.description | truncate:140}}</p>                           
+                            <p>{{con.description | truncate:140}}</p>    
+                            <p>{{con.typename}}:  {{con.format}}</p>                           
                             <div class="button-group align-center">                                                            
                                 <dx-button class="button primary" (onClick)="editDataSource(con)"  text="Edit"></dx-button>                                                                
                                 <dx-button class="button alert" (onClick)="deleteDataSource(con)" text="Delete"></dx-button>
@@ -55,18 +56,28 @@
                     </div>                   
                 </div>
                 <div class="row">
-                        <div class="small-12 medium-6 columns">
-                            <label>Data source type                                
-                                <select [(ngModel)]="singleDataSource.typename"  name="typename" required #prTypeName="ngModel">
-                                    <option value ='csv' >CSV</option>
-                                    <option value ='ftp' >Ftp</option>
-                                    <option value ='webservice'>Webservice</option>
-                                </select>
-                            </label>
-                        </div>
+                    <div class="small-12 medium-6 columns">
+                        <label>Data source type                                
+                            <select [(ngModel)]="singleDataSource.typename"  name="typename" required #prTypeName="ngModel">
+                                <option value ='csv' >CSV</option>
+                                <option value ='ftp' >Ftp</option>
+                                <option value ='webservice'>Webservice</option>
+                            </select>
+                        </label>
                     </div>
-                                        
-                    <ng-container *ngIf="singleDataSource.typename=='csv';then csvContent else otherContent"> </ng-container>
+                </div>
+                <div class="row">
+                    <div class="small-12 medium-6 columns">
+                        <label>Data format                               
+                            <select [(ngModel)]="singleDataSource.format"  name="format" required #prTypeName="ngModel">
+                                <option value ='SingleSeries' >SingleSeries</option>
+                                <option value ='MultiSeries' >MultiSeries</option>
+                                <option value ='Tabular'>Tabular</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>                   
+                <ng-container *ngIf="singleDataSource.typename=='csv';then csvContent else otherContent"> </ng-container>
                     <ng-template #csvContent>
                         <div class="row">
                             <div class="small-12 medium-6 columns">

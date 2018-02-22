@@ -3,7 +3,7 @@ import * as firebase from 'firebase';
 import { RawDashData, DecoratedDashData } from '../models/dashdata';
 import { DashMeta } from '../models/dashmeta';
 import { DependencyExp } from '../models/dependencyexp';
-import { Widget,Container, Pie2D, Bar2D, Line2D,GridWidget,KPIWidget, Label, ImageWidget, DatePicker, Column2D } from '../models/widget';
+import { Widget,Container, Pie2D, Bar2D, Line2D, MSLine2D, GridWidget,KPIWidget, Label, ImageWidget, DatePicker, Column2D } from '../models/widget';
 import { Constants} from '../shared/constants';
 import { DataSource} from '../models/datasource';
 import { DataSourceService} from '../services/dataSource.service';
@@ -21,6 +21,7 @@ export class UIDesignerService {
             new Label(),
             new Bar2D(this,"","",""),
             new Line2D(this, "","",""),
+            new MSLine2D(this, "","",""),
             new Column2D(this, "","",""),
             new Pie2D(this, "","",""),
             new GridWidget(this),
@@ -112,10 +113,8 @@ export class UIDesignerService {
     generateChartDataSource(dataSource:DataSource,keyAttr:string,valAttr:string, depPropName?:any, depPropExp?:any, filter?:any):any
     {     
         //debugger;  
-        if (dataSource.name == "sampleColumn2D"||dataSource.name =="sampleBar2D")
-        {
-           
-            //todo  var rows = dataSource.get();
+        if (dataSource.name == "sampleColumn2D"||dataSource.name =="sampleBar2D"||dataSource.name =="samplePie2D") //single series Webservice
+        {                       
             var chartData:any =  {
                 "depPropName":depPropName,
                 "depPropExp":depPropExp,
@@ -124,163 +123,69 @@ export class UIDesignerService {
                     "subCaption": "",                     
                 },                 
             }; 
+            if (depPropExp.length>0){
+                var de = new DependencyExp(depPropExp,filter);
+            }
             dataSource.load(function(x:any){
                 chartData.data = [];
                 for (var i=0;i<x.length;i++){
-                    chartData.data.push({                    
-                                        "label": x[i].label,
-                                        "value": x[i].cost,
-                                        "key":x[i].key
-                                    }
-                    );
+                    var isMatch = !de || de.isMatch(x[i]);
+                    if (isMatch && keyAttr && keyAttr.length>0 && valAttr && valAttr.length>0)
+                    { 
+                        chartData.data.push({                    
+                                            "label": x[i][keyAttr],
+                                            "value": x[i][valAttr], //todo
+                                            "key":x[i].key
+                                        }
+                        );
+                    }
                 }
             });
             return chartData;  
-        }
-        else if (dataSource.name == "samplePie2D")
-        { 
-             var de = new DependencyExp(depPropExp,filter);
-            
-            if ( de.isMatch({key:1})){
-                 return  {
+        }       
+        else if (  dataSource.name =="sampleLine2D" ) //multi series WebService
+        {          
+            var chartData:any =  {
                 "depPropName":depPropName,
                 "depPropExp":depPropExp,
                 "chart": {
-                   "caption": "",
-                    "subCaption": "",                  
+                    "caption": "",
                 },
-                "data": [{
-                    "label": "FOM",
-                    "value": "880000"
-                }]
-            };   
-        }
-         else if ( de.isMatch({key:2})){
-                 return  {
-                "depPropName":depPropName,
-                "depPropExp":depPropExp,
-                "chart": {
-                   "caption": "",
-                    "subCaption": "",                  
-                },
-                "data": [{
-                    "label": "Fixed",
-                    "value": "730000"
-                }]
-            };   
-            }
-            else
-            return  {
-                "depPropName":depPropName,
-                "depPropExp":depPropExp,
-                "chart": {
-                   "caption": "",
-                    "subCaption": "",                  
-                },
-                "data": [{
-                    "label": "FOM",
-                    "value": "880000"
-                }, {
-                    "label": "Fixed",
-                    "value": "730000"
-                }, {
-                    "label": "other",
-                    "value": "590000"
-                }]
-            };   
-        } 
-        else if (  dataSource.name =="sampleLine2D" )
-        {
-            return  { 
-                    "depPropName":depPropName,
-                    "depPropExp":depPropExp, 
-                    "chart": {
-                                    "caption": "",
-                              },
-                    "categories": [
+                "categories": [
+                    {
+                        "category": [ ]
+                    }
+                ],
+                "dataset": []
+            };
+            dataSource.load(function(x:any){ 
+                var de:DependencyExp = null;
+                if (depPropExp.length > 0){
+                    de= new DependencyExp(depPropExp,filter);
+                }               
+                for (var i=0;i<x.length;i++){               
+                    var ds:any = {
+                        "seriesname":x[i].seriesname, 
+                        "data":[]
+                    };
+                    for (var j=0; j<x[i].values.length;j++)
+                    {
+                        var isMatch = !de || de.isMatch(x.values[i]);
+                        if (isMatch && keyAttr && keyAttr.length>0 && valAttr && valAttr.length>0)
                         {
-                            "category": [
-                                {
-                                    "label": " "
-                                },
-                                {
-                                    "label": " "
-                                },
-                                {
-                                    "label": " "
-                                },               
-                                {
-                                    "label": " "
-                                },
-                                {
-                                    "label": "  "
-                                },
-                                {
-                                    "label": " "
-                                },
-                                {
-                                    "label": " "
-                                }
-                            ]
+                            ds.data.push({"value":x[i].values[j][valAttr]});
+                            if (i==0){
+                                chartData.categories[0].category.push({"label":x[i].values[j][keyAttr]})
+                            }
                         }
-                    ],
-                    "dataset": [
-                        {
-                            "seriesname": "Bakersfield Central",
-                            "data": [
-                                    {
-                                        "value": "23123"
-                                    },
-                                    {
-                                        "value": "20233"
-                                    },
-                                    {
-                                        "value": "18507"
-                                    },
-                                    {
-                                        "value": "9110"
-                                    },
-                                    {
-                                        "value": "15529"
-                                    },
-                                    {
-                                        "value": "14803"
-                                    },
-                                    {
-                                        "value": "12002"
-                                    }
-                                ]
-                        },
-                        {
-                            "seriesname": "Los Angeles Topanga",
-                            "data": [
-                                {
-                                    "value": "13400"
-                                },
-                                {
-                                    "value": "8800"
-                                },
-                                {
-                                    "value": "22800"
-                                },
-                                {
-                                    "value": "14400"
-                                },
-                                {
-                                    "value": "15800"
-                                },
-                                {
-                                    "value": "19800"
-                                },
-                                {
-                                    "value": "21800"
-                                }
-                            ]
-                        }
-                ]
-            }
+                    }
+                    
+                    chartData.dataset.push(ds);        
+                }
+            });
+            return chartData
         }
-        else
+        else //multiseries CSV
         {
             //itt tudni kell, h single vagy multiseries lesz
             var chartData:any =  {  
@@ -305,10 +210,14 @@ export class UIDesignerService {
                 debugger;
                 var data = that.csvJSON(x, true,  dataSource.csvSkip, dataSource.csvSeparator);
                 chartData.dataset[0].sriesname=data.headers[keyAttr];
-                var de = new DependencyExp(depPropExp,filter);
+                var de:DependencyExp = null;
+                if (depPropExp.length > 0){
+                    de= new DependencyExp(depPropExp,filter);
+                }
                 for (var i=0;i<data.rows.length;i++){    
                     //apply filter
-                    if (de.isMatch(data.rows[i]))
+                    var isMatch = !de || de.isMatch(data.rows[i]);
+                    if (isMatch && keyAttr && keyAttr.length>0 && valAttr && valAttr.length>0)
                     {  
                         if (data.rows[i][valAttr])
                         {                            
@@ -326,6 +235,7 @@ export class UIDesignerService {
             return chartData;
         };
     }
+
     generateGridDataSource(dataSource:DataSource, depPropExp?:any, filter?:any):any
     {     
             //debugger;                          

@@ -3,9 +3,24 @@
 .top-bar-title {
     font-family: 'Coiny', cursive;
     font-size: 22px;
-    color: #ffffff;
+    color: #ffffff;   
 }
-
+.top-bar-title a {
+    font-color:#fff;
+}
+.top-bar {
+    color: #ffffff;
+   
+  
+}
 .nav-menu a {
     color: #ffffff;
+    font-color:#ffffff;
+}
+.nav-header{
+    background-image:   url("/public/assets/images/code.jpg");
+}
+
+.top-bar, .top-bar ul {
+     background-color:rgba(5, 5, 5, .05);
 }

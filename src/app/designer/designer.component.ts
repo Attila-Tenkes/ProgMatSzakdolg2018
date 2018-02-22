@@ -67,7 +67,7 @@ _me:DesignerComponent;
        {
         this._mode = 'Designer';
        }
-       debugger;
+       //debugger;
        var that =this;
        
       // let raw =this.designerSVC.get(dashboardId);

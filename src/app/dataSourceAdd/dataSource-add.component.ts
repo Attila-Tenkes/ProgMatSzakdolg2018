@@ -16,6 +16,7 @@ export class DataSourceAddComponent {
     description: string;    
     dataSource: DataSource;    
     typename:string = 'webservice'; //Default
+    format:string = 'MultiSeries'; //Default
     user: string=null;
     pwd: string=null;
     fileUrl:string=null;
@@ -46,6 +47,7 @@ export class DataSourceAddComponent {
             this.name, 
             this.description,  
             this.typename, 
+            this.format,
             null,
             this.user,
             this.pwd,

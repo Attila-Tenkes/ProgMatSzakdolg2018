@@ -49,7 +49,7 @@ export class RawDashData {
            if (json.upperColor){this.widget["upperColor"] = json.upperColor;}
            if (json.lowerTreshhold){this.widget["lowerTreshhold"] = json.lowerTreshhold;}      
            if (json.lowerColor){this.widget["lowerColor"] = json.lowerColor;}
-                      
+           if (json.calculation){this.widget["calculation"] = json.calculation;}
            this.cells= [];
            if (json.cells)
            {
@@ -97,6 +97,8 @@ export class RawDashData {
                 result.upperColor=(<KPIWidget>this.widget).upperColor;
                 result.lowerTreshhold=(<KPIWidget>this.widget).lowerTreshhold;
                 result.lowerColor=(<KPIWidget>this.widget).lowerColor;
+                result.calculation=(<KPIWidget>this.widget).calculation;
+                result.valAttr = this.widget["valAttr"];
             }
             if ( this.widget instanceof DataSourcedWidget){
                 result.dataSourceID = this.widget.dataSourceID;

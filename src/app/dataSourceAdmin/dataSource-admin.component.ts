@@ -52,6 +52,7 @@ export class DataSourceAdminComponent implements OnInit {
                          tmp[key].name, 
                          tmp[key].desc,
                          tmp[key].typename,
+                         tmp[key].format,                         
                          tmp[key].id, 
                          tmp[key].user,
                          tmp[key].pwd,

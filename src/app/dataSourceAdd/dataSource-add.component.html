@@ -32,7 +32,17 @@
             </label>
         </div>
     </div>
-                          
+    <div class="row">
+        <div class="small-12 medium-6 columns">
+            <label>Data format                               
+                <select [(ngModel)]="format"  name="format" required #prTypeName="ngModel">
+                    <option value ='SingleSeries' >SingleSeries</option>
+                    <option value ='MultiSeries' >MultiSeries</option>
+                    <option value ='Tabular'>Tabular</option>
+                </select>
+            </label>
+        </div>
+    </div>                 
     <ng-container *ngIf="typename=='csv';then csvContent else otherContent"> </ng-container>
     <ng-template #csvContent>
         <div class="row">

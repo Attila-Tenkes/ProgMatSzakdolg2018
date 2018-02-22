@@ -56,12 +56,15 @@ export class Widget {
 }
 export class DataSourcedWidget extends Widget  {    //hack: see layoutdesigner.ts update()
     public dataSourceID: string;
+    public _dataFormat: string;
     constructor(        
-        typename: string,        
+        typename: string,    
+        format:string,    
         _isDroppable:boolean     
     ){
         super(typename, _isDroppable);
          this.dataSourceID = '';
+         this._dataFormat = format;
     } 
      setDataSourceID(id:string):Promise<any>{
         this.dataSourceID = id;
@@ -76,10 +79,11 @@ export class DependencyReceiver extends DataSourcedWidget implements IDependency
     notify(x: any):void{}    
     DependencyPropertyExpression:string="";   
     constructor(        
-        typename: string,        
+        typename: string,  
+        format:string,      
         _isDroppable:boolean     
     ){
-        super(typename, _isDroppable);
+        super(typename, format, _isDroppable);
     }    
 }
 export class ExceptionWidget extends Widget{
@@ -119,7 +123,7 @@ export class Label extends Widget{
 export class GridWidget extends DependencyReceiver  {
     constructor(  protected _dataProvider: UIDesignerService,  
     ){     
-        super('GridWidget',true );
+        super('GridWidget','Tabular',true );
     }    
   
     _isDataReady:boolean;  
@@ -191,7 +195,7 @@ export class KPIWidget extends DependencyReceiver {
 
     constructor(  protected _chartDataProvider: UIDesignerService,       
         dataSourceID:string   ){     
-        super('KPIWidget',true );
+        super('KPIWidget','any',true );
         //set defaults
         this.fontWeight = 'normal';
         this.fontSize = '12pt';
@@ -321,11 +325,12 @@ export class FusionWidget extends DependencyReceiver implements IDependencySubje
     _isDataReady:boolean;  
     DependencyPropertyName:string="";    
     constructor( 
-        typename:string,           
+        typename:string,  
+        format:string,         
         protected _chartDataProvider: UIDesignerService,       
         dataSourceID:string      
     ){
-        super(typename, false);
+        super(typename, format, false);
         this._fcType=typename;
         this._isDataReady = false;
         this.dataSourceID = dataSourceID;
@@ -389,7 +394,7 @@ export class SingleSeriesFusionWidget extends FusionWidget{
         valAttr:string=""
     ){
       
-        super(typename,_chartDataProvider,dataSourceID);
+        super(typename,'SingleSeries',_chartDataProvider,dataSourceID);
         this.keyAttr = keyAttr;
         this.valAttr = valAttr;
     }
@@ -399,9 +404,11 @@ export class MultiSeriesFusionWidget extends FusionWidget{
      constructor(  
         typename:string,      
         _chartDataProvider: UIDesignerService,     
-        dataSourceID:string
+        dataSourceID:string,
+        keyAttr:string,
+        valAttr:string  
     ){
-        super(typename,_chartDataProvider,dataSourceID);
+        super(typename,'MultiSeries',_chartDataProvider,dataSourceID);
     }
 }
 
@@ -425,10 +432,21 @@ export class Line2D extends SingleSeriesFusionWidget{
         valAttr:string    
     ){
         super('Line2D',_chartDataProvider,dataSourceID,keyAttr,valAttr);
-        this._fcType='msline';
+        this._fcType='line';
     }
 }
 
+export class MSLine2D extends MultiSeriesFusionWidget{
+    constructor(    
+        _chartDataProvider: UIDesignerService,      
+        dataSourceID:string,
+        keyAttr:string,
+        valAttr:string    
+    ){
+        super('MSLine2D',_chartDataProvider,dataSourceID,keyAttr,valAttr);
+        this._fcType='msline';
+    }
+}
 export class Column2D extends SingleSeriesFusionWidget{
     constructor(   
         _chartDataProvider: UIDesignerService,                 
@@ -468,8 +486,10 @@ export class WidgetFact
             //result.load().then(x=>{console.log(x);});   
         }
         else if (json.type == 'Line2D'){
-            result=new Line2D(chartDataProvider, json.dataSourceID,json.keyAttr,json.valAttr);                          
-              
+            result=new Line2D(chartDataProvider, json.dataSourceID,json.keyAttr,json.valAttr);                                        
+        }
+        else if (json.type == 'MSLine2D'){
+            result=new MSLine2D(chartDataProvider, json.dataSourceID,json.keyAttr,json.valAttr);                                        
         }
         else if (json.type == 'Bar2D'){            
             result=new Bar2D(chartDataProvider, json.dataSourceID,json.keyAttr,json.valAttr);                                                

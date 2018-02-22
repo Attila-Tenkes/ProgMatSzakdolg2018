@@ -29,13 +29,21 @@ export class ObjectInspectorComponent implements AfterViewInit{
     constructor( private designerSVC: UIDesignerService, private userSVC: UserService,  private fileAdminSVC: FileService,
                 private dsSvc:DataSourceService,private zone:NgZone,@Host() parent: DesignerComponent)
     {
+        debugger;
         var that = this;
         this._parent=parent;
         this.fileAdminSVC.getImagesOnce().then(x=>{this.theImageFiles=x;});
-        this.dsSvc.getDataSourcesOnce().then(x=>{this.theDataSources=x;});      
+        this.dsSvc.getDataSourcesOnce().then(x=>{ this.theDataSources=x;});      
         this.theOrientations =['horizontal','vertical'];
     }
-
+    getAvailableDataSources(){
+        if (this.root.selected.widget instanceof widgets.DataSourcedWidget && this.theDataSources && this.theDataSources.length>0){
+            var format = (<widgets.DataSourcedWidget>this.root.selected.widget)._dataFormat;
+            var dss = this.theDataSources.filter( ds => ds.format === format);            
+            return  dss;
+        }
+        return [];        
+    }
     onImageDDLChange(selectedImage:any) {
         console.log(selectedImage);
         //todo type check        

@@ -22,6 +22,9 @@
                 <td>{{prop}} </td>   
                 <td>
                     <div ngSwitch="{{prop}}"> 
+                        <div *ngSwitchCase="'typename'">
+                                <label>{{root.selected.widget[prop]}}</label>                                    
+                        </div>
                         <div *ngSwitchCase="'orientation'">
                             <select [ngModel]="root.selected.widget[prop]" (ngModelChange)="onOrientationChange($event)">                        
                                 <option [ngValue]="ds" *ngFor="let ds of theOrientations">{{ds}}</option>
@@ -35,7 +38,7 @@
                         <!--//todo KPI calc properties eseteben ujra kell futtatni a calc-t-->
                         <div *ngSwitchCase="'dataSourceID'">
                             <select [ngModel]="root.selected.widget[prop]" (ngModelChange)="onDataSourceDDLChange($event)">                        
-                                <option [ngValue]="ds.id" *ngFor="let ds of theDataSources">{{ds.name}}</option>
+                                <option [ngValue]="ds.id" *ngFor="let ds of getAvailableDataSources()">{{ds.name}}</option>
                             </select>
                         </div> 
                         <div *ngSwitchCase="'DependencyPropertyName'">
@@ -46,7 +49,7 @@
                         </div> 
                         <div *ngSwitchCase="'visibleOrder'">
                                 <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey3($event)">                         
-                            </div> 
+                        </div> 
                         <div *ngSwitchDefault>
                             <input type="text" [(ngModel)]="root.selected.widget[prop]" >                         
                         </div>  
