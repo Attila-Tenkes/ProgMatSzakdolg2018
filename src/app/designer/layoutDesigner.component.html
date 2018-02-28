@@ -2,55 +2,46 @@
         <div (click)="selectItem($event, node)" [class]="css(node, parent)" [attr.domId]="domID(node)"
         (contextmenu)="contextMenu($event, node)">
                 <!--<p>{{domID(node)}}<br/>  </p>-->
-                        <ng-container *ngIf="node.widget">
-                                             
+                <ng-container *ngIf="node.widget">                                             
                         <div *ngIf="node.widget.isReady();then widgetContent else widgetPlaceholder"></div>                          
-                                <ng-template #widgetContent>
-                                        <div *ngIf="isFusionChart(node.widget)">
-                                                <fusioncharts
-                                                        width="{{node.width}}"
-                                                        height="{{node.height}}"
-                                                        type="{{node.widget._fcType}}"
-                                                        dataFormat="JSON"
-                                                        [dataSource]="node.widget._dataSource"
-                                                        [events]="events">                                                
-                                                </fusioncharts> 
-                                        </div>                                        
-                                        <div *ngIf="isTable(node.widget)">
-                                                <!-- todo table control -->
-                                                <dx-data-grid  [dataSource]="node.widget._dataSource.rows">   
-                                                </dx-data-grid>
-                                        </div>
-                                        <div *ngIf="isLabel(node.widget)">                                                
-                                                <ctlLabel [widget]="node.widget">   
-                                                </ctlLabel>
-                                        </div>
-                                        <div *ngIf="isKPI(node.widget)">
-                                                <ctlKPI [widget]="node.widget">   
-                                                </ctlKPI>
-                                        </div>
-                                        <div *ngIf="isDatePicker(node.widget)">
-                                                <!-- todo KPI control -->
-                                                 <dx-date-box
-                                                     (onValueChanged)="onDateChanged($event, node.widget)"   >
-                                                </dx-date-box>
-                                        </div>
-                                        
-                                        <div *ngIf="isImage(node.widget)">
-                                                <ctlImage  [widget]= "node.widget">   </ctlImage>                                              
-                                        </div>
-                                       
-                                </ng-template>
-                                <ng-template #widgetPlaceholder> 
-                                        <!--type:  {{node.widget.typename}} -->
-                                        <div *ngIf="!isContainer(node.widget)">
-                                                <img [src]="node.widget.icon(1)" alt="{{node.widget.typename}}"/>  
-                                        </div>
-                                </ng-template>                                                                                                 
-                        </ng-container>
-               
-      
-                
+                        <ng-template #widgetContent>
+                                <div class="widget-title">{{node.widget.title}}</div>
+                                <div *ngIf="isFusionChart(node.widget)">                                                
+                                        <!-- <ctlChart [widget]="node.widget">  </ctlChart> -->
+                                        <fusioncharts
+                                                width="{{node.widget.width}}"
+                                                height="{{node.widget.height}}"
+                                                type="{{node.widget._fcType}}"
+                                                dataFormat="JSON"                                                                                           
+                                                [dataSource]="node.widget._dataSource"
+                                                [events]="events">                                                
+                                        </fusioncharts> 
+                                </div>                                        
+                                <div *ngIf="isTable(node.widget)">
+                                        <!-- todo table control -->
+                                        <dx-data-grid  [dataSource]="node.widget._dataSource.rows">   </dx-data-grid>
+                                </div>
+                                <div *ngIf="isLabel(node.widget)">                                                
+                                        <ctlLabel [widget]="node.widget"></ctlLabel>
+                                </div>
+                                <div *ngIf="isKPI(node.widget)">
+                                        <ctlKPI [widget]="node.widget"> </ctlKPI>
+                                </div>
+                                <div *ngIf="isDatePicker(node.widget)">                                        
+                                        <dx-date-box  (onValueChanged)="onDateChanged($event, node.widget)" ></dx-date-box>
+                                </div>                                
+                                <div *ngIf="isImage(node.widget)">
+                                        <ctlImage  [widget]= "node.widget">   </ctlImage>                                              
+                                </div>                                
+                        </ng-template>
+                        <ng-template #widgetPlaceholder> 
+                                <!--type:  {{node.widget.typename}} -->
+                                <div *ngIf="!isContainer(node.widget)">
+                                        <img [src]="node.widget.icon(1)" alt="{{node.widget.typename}}"/>  
+                                </div>
+                        </ng-template>                                                                                                 
+                </ng-container>
+                                            
                 <ng-container *ngIf="node.cells">
                         <ng-container *ngFor="let child of node.cells">                             
                                 <ng-container *ngTemplateOutlet="recursiveList; context:{ node: child, parent:node, root:root }"></ng-container>

@@ -85,6 +85,12 @@ export class ObjectInspectorComponent implements AfterViewInit{
         //todo keycode check      
         this.root.sortChildren(this.root.selected);
     }
+    onKey4(event: KeyboardEvent)  {
+        (<widgets.FusionWidget>this.root.selected.widget).notify('rerender');
+    }
+    fusionProp(prop:string){       
+        return  (prop =='caption' ||prop=='xAxisName');
+    }
     ngAfterViewInit(){
         var that = this;
         $(document).ready(function(){

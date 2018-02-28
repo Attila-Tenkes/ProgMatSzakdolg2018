@@ -194,12 +194,13 @@ export class KPIWidget extends DependencyReceiver {
     public _calcColor='#0a0a0a';
 
     constructor(  protected _chartDataProvider: UIDesignerService,       
-        dataSourceID:string   ){     
+        dataSourceID:string=""){     
         super('KPIWidget','any',true );
         //set defaults
         this.fontWeight = 'normal';
         this.fontSize = '12pt';
         this.fontColor = '#0a0a0a';
+        this.dataSourceID = dataSourceID;
     }   
     _isDataReady:boolean;
     notify(x: any):void{
@@ -324,16 +325,28 @@ export class FusionWidget extends DependencyReceiver implements IDependencySubje
     _fcType:string;
     _isDataReady:boolean;  
     DependencyPropertyName:string="";    
+    labelAttr:string="";
+    keyAttr:string="";
+    valAttr:string="";
+    caption="";
+    xAxisName="";
+    yAxisName="";
     constructor( 
         typename:string,  
         format:string,         
         protected _chartDataProvider: UIDesignerService,       
-        dataSourceID:string      
+        dataSourceID:string="",
+        labelAttr:string="",
+        keyAttr:string="", 
+        valAttr: string=""  
     ){
         super(typename, format, false);
         this._fcType=typename;
         this._isDataReady = false;
         this.dataSourceID = dataSourceID;
+        this.labelAttr=labelAttr; 
+        this.keyAttr=keyAttr; 
+        this.valAttr= valAttr; 
     }
     notify(x: any):void{
         //debugger;
@@ -356,7 +369,7 @@ export class FusionWidget extends DependencyReceiver implements IDependencySubje
 
                     //if (ds !=null)
                     {
-                    that._dataSource = this._chartDataProvider.generateChartDataSource(dataSource, that["keyAttr"],that["valAttr"], that.DependencyPropertyName,that.DependencyPropertyExpression);
+                    that._dataSource = this._chartDataProvider.generateChartDataSource(that, dataSource,  that["labelAttr"],that["keyAttr"],that["valAttr"], that.DependencyPropertyName,that.DependencyPropertyExpression);
                     //todo ide promise kellene
                     that._isDataReady = true;
                     
@@ -369,7 +382,7 @@ export class FusionWidget extends DependencyReceiver implements IDependencySubje
                     this._chartDataProvider.getDsService().get(this.dataSourceID).then(x=>
                         {
                             dataSource=x;
-                            that._dataSource = this._chartDataProvider.generateChartDataSource(dataSource,that["keyAttr"],that["valAttr"],that.DependencyPropertyName,that.DependencyPropertyExpression,filter);               
+                            that._dataSource = this._chartDataProvider.generateChartDataSource(that, dataSource, that["labelAttr"],that["keyAttr"],that["valAttr"],that.DependencyPropertyName,that.DependencyPropertyExpression,filter);               
                             that._isDataReady = true;                                                         
                             resolve(that._dataSource);                            
                         }                        
@@ -383,20 +396,16 @@ export class FusionWidget extends DependencyReceiver implements IDependencySubje
     isReady():boolean{return this._isDataReady;}
 }
 
-export class SingleSeriesFusionWidget extends FusionWidget{
-    keyAttr:string="";
-    valAttr:string="";
+export class SingleSeriesFusionWidget extends FusionWidget{  
  constructor(   
         typename:string,    
         _chartDataProvider: UIDesignerService, 
         dataSourceID:string,
-        keyAttr:string="",
-        valAttr:string=""
-    ){
-      
-        super(typename,'SingleSeries',_chartDataProvider,dataSourceID);
-        this.keyAttr = keyAttr;
-        this.valAttr = valAttr;
+        labelAttr:string,
+        keyAttr:string,
+        valAttr:string
+    ){      
+        super(typename,'SingleSeries',_chartDataProvider,dataSourceID, labelAttr, keyAttr, valAttr);     
     }
 }
 
@@ -405,10 +414,11 @@ export class MultiSeriesFusionWidget extends FusionWidget{
         typename:string,      
         _chartDataProvider: UIDesignerService,     
         dataSourceID:string,
+        labelAttr:string,
         keyAttr:string,
         valAttr:string  
     ){
-        super(typename,'MultiSeries',_chartDataProvider,dataSourceID);
+        super(typename,'MultiSeries',_chartDataProvider,dataSourceID, labelAttr, keyAttr, valAttr);
     }
 }
 
@@ -416,11 +426,11 @@ export class Pie2D extends SingleSeriesFusionWidget{
     constructor(    
         _chartDataProvider: UIDesignerService,            
         dataSourceID:string,
+        labelAttr:string,
         keyAttr:string,
-        valAttr:string    
-        
+        valAttr:string            
     ){
-        super('Pie2D',_chartDataProvider,dataSourceID,keyAttr,valAttr);
+        super('Pie2D',_chartDataProvider,dataSourceID,labelAttr,keyAttr,valAttr);
     }
 }
 
@@ -428,10 +438,11 @@ export class Line2D extends SingleSeriesFusionWidget{
     constructor(    
         _chartDataProvider: UIDesignerService,      
         dataSourceID:string,
+        labelAttr:string,
         keyAttr:string,
         valAttr:string    
     ){
-        super('Line2D',_chartDataProvider,dataSourceID,keyAttr,valAttr);
+        super('Line2D',_chartDataProvider,dataSourceID,labelAttr,keyAttr,valAttr);
         this._fcType='line';
     }
 }
@@ -440,10 +451,11 @@ export class MSLine2D extends MultiSeriesFusionWidget{
     constructor(    
         _chartDataProvider: UIDesignerService,      
         dataSourceID:string,
+        labelAttr:string,
         keyAttr:string,
         valAttr:string    
     ){
-        super('MSLine2D',_chartDataProvider,dataSourceID,keyAttr,valAttr);
+        super('MSLine2D',_chartDataProvider,dataSourceID,labelAttr,keyAttr,valAttr);
         this._fcType='msline';
     }
 }
@@ -451,10 +463,11 @@ export class Column2D extends SingleSeriesFusionWidget{
     constructor(   
         _chartDataProvider: UIDesignerService,                 
         dataSourceID:string,
-         keyAttr:string,
+        labelAttr:string,
+        keyAttr:string,
         valAttr:string    
     ){
-        super('Column2D', _chartDataProvider,dataSourceID,keyAttr,valAttr);
+        super('Column2D', _chartDataProvider,dataSourceID,labelAttr,keyAttr,valAttr);
     }
 }
 
@@ -463,10 +476,11 @@ export class Bar2D extends SingleSeriesFusionWidget{
     constructor(        
         _chartDataProvider: UIDesignerService,        
         dataSourceID:string,
+        labelAttr:string,
         keyAttr:string,
         valAttr:string    
     ){
-        super('Bar2D', _chartDataProvider,dataSourceID,keyAttr,valAttr);    
+        super('Bar2D', _chartDataProvider,dataSourceID,labelAttr,keyAttr,valAttr);    
     }  
 }
 
@@ -482,20 +496,20 @@ export class WidgetFact
             result= new DatePicker();
         }
         else if (json.type == 'Pie2D'){
-            result=new Pie2D(chartDataProvider, json.dataSourceID, json.keyAttr,json.valAttr);                                
+            result=new Pie2D(chartDataProvider, json.dataSourceID, json.labelAttr, json.keyAttr,json.valAttr);                                
             //result.load().then(x=>{console.log(x);});   
         }
         else if (json.type == 'Line2D'){
-            result=new Line2D(chartDataProvider, json.dataSourceID,json.keyAttr,json.valAttr);                                        
+            result=new Line2D(chartDataProvider, json.dataSourceID, json.labelAttr, json.keyAttr,json.valAttr);                                        
         }
         else if (json.type == 'MSLine2D'){
-            result=new MSLine2D(chartDataProvider, json.dataSourceID,json.keyAttr,json.valAttr);                                        
+            result=new MSLine2D(chartDataProvider, json.dataSourceID, json.labelAttr, json.keyAttr,json.valAttr);                                        
         }
         else if (json.type == 'Bar2D'){            
-            result=new Bar2D(chartDataProvider, json.dataSourceID,json.keyAttr,json.valAttr);                                                
+            result=new Bar2D(chartDataProvider, json.dataSourceID, json.labelAttr, json.keyAttr,json.valAttr);                                                
         }
           else if (json.type == 'Column2D'){            
-            result=new Column2D(chartDataProvider, json.dataSourceID,json.keyAttr,json.valAttr);                                                            
+            result=new Column2D(chartDataProvider, json.dataSourceID,json.labelAttr, json.keyAttr,json.valAttr);                                                            
         }
         else if (json.type == 'Label'){
             result=new Label();           
@@ -516,8 +530,8 @@ export class WidgetFact
         if (json.dataSourceID){
             (<DataSourcedWidget>result).dataSourceID = json.dataSourceID?json.dataSourceID:'';
         }
-        result.height = json.height?json.height:100;
-        result.width = json.width?json.width:100;        
+        result.height = json.height?json.height:400;
+        result.width = json.width?json.width:600;        
         result.title =json.title||''; 
         result._tag = context;     
         result.visibleOrder =   json.visibleOrder?json.visibleOrder:0;

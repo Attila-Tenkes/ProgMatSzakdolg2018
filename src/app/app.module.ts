@@ -32,6 +32,7 @@ import { DesignerComponent } from './designer/designer.component';
 import { LabelComponent } from './components/label.component';
 import { ImageComponent } from './components/image.component';
 import { KPIComponent } from './components/kpi.component';
+import { ChartComponent } from './components/chart.component';
 import { LayoutDesignerComponent } from './designer/layoutDesigner.component';
 import { ObjectExplorerComponent } from './designer/objectExplorer.component';
 import { ToolbarComponent } from './designer/toolbar.component';
@@ -51,7 +52,7 @@ import * as Charts from 'fusioncharts/fusioncharts.charts';
 //DevExtereme
 import { DxButtonModule, DxPopupModule } from 'devextreme-angular';
 import { DxSelectBoxModule, DxCheckBoxModule, DxListModule, DxDataGridModule, DxDateBoxModule } from 'devextreme-angular';
-import { DxScrollViewModule, DxScrollViewComponent}from 'devextreme-angular';
+import { DxScrollViewModule, DxScrollViewComponent, DxGalleryModule}from 'devextreme-angular';
 
 import { SingleSeriesChartComponent } from './components/singleSeriesChart.component';
 
@@ -71,7 +72,7 @@ import { SingleSeriesChartComponent } from './components/singleSeriesChart.compo
         DxButtonModule,
         DxPopupModule,
         DxSelectBoxModule, DxCheckBoxModule, DxListModule, DxDataGridModule, DxDateBoxModule,
-        DxScrollViewModule
+        DxScrollViewModule, DxGalleryModule
     ],
     exports: [       
         TruncatePipe
@@ -92,6 +93,7 @@ import { SingleSeriesChartComponent } from './components/singleSeriesChart.compo
         LabelComponent,
         ImageComponent,
         KPIComponent,
+        ChartComponent,
         
         LoginComponent,
         SignUpComponent,

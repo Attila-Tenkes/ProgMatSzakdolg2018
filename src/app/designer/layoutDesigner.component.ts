@@ -44,13 +44,13 @@ export class LayoutDesignerComponent {
     contextMenu(event:any, node:RawDashData)
     {
         console.log(event);  
-        //debugger;     
-        this.root.highlightOne(node);
-        
-        //$("#dbObjInspector").dialog("open");
-        this.designer.showHideInspector(true);
+        if (!this.isViewerMode())
+        {
+            this.root.highlightOne(node);                
+            this.designer.showHideInspector(true);        
+        }
         event.preventDefault();
-		event.stopPropagation();
+        event.stopPropagation();
     }
     isViewerMode(){
         return  this.designer &&  this.designer._mode && this.designer._mode=='Viewer';
@@ -125,8 +125,8 @@ export class LayoutDesignerComponent {
         return node.domId;
     }
 
-     selectedValue: string = "nothing";
-     selectedKey: string = "nothing";
+    selectedValue: string = "nothing";
+    selectedKey: string = "nothing";
     onDateChanged(event:any, widget:any)
     {
         debugger;        
@@ -137,16 +137,16 @@ export class LayoutDesignerComponent {
                                     && node.widget["DependencyPropertyExpression"]!=undefined 
                                     //&& node.widget instanceof widgets.DependencyReceiver
                                 )
-                                {
-                                     
+                                {                                     
                                      var observer =<widgets.DependencyReceiver> node.widget ;                                     
                                      observer.notify(arg);                                                                                                
                                 }                                        
                             },  
                             this.dependenyProperties);                             
     }
-    update() {
+    onDataplotClick() {
         var _this = this;
+        debugger;
         return (eve:any, arg:any) => {          
             
             _this.selectedValue = arg.displayValue;
@@ -162,8 +162,7 @@ export class LayoutDesignerComponent {
                                     && node.widget["DependencyPropertyExpression"]!=undefined 
                                     //&& node.widget instanceof widgets.DependencyReceiver
                                 )
-                                {
-                                     
+                                {                                     
                                      var observer =<widgets.DependencyReceiver> node.widget ;                                     
                                      observer.notify(arg);                                                               
                                 }                                        
@@ -179,6 +178,6 @@ export class LayoutDesignerComponent {
     }
     
     events = {
-        dataplotClick : this.update()
+        dataplotClick : this.onDataplotClick()
     }     
 }

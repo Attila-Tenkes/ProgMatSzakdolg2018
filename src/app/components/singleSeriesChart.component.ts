@@ -4,8 +4,7 @@ import {UserService} from '../services/user.service';
 
 @Component({
     selector: 'singleSeriesChart',
-    template: `                
-        
+    template: `                        
            <span>ide jon az X es Y tendgely tulajdonsgai</span>
     `  
 })

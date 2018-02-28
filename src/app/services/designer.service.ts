@@ -6,6 +6,7 @@ import { DependencyExp } from '../models/dependencyexp';
 import { Widget,Container, Pie2D, Bar2D, Line2D, MSLine2D, GridWidget,KPIWidget, Label, ImageWidget, DatePicker, Column2D } from '../models/widget';
 import { Constants} from '../shared/constants';
 import { DataSource} from '../models/datasource';
+import { FusionWidget} from '../models/widget';
 import { DataSourceService} from '../services/dataSource.service';
 @Injectable()
 
@@ -19,11 +20,11 @@ export class UIDesignerService {
      }
      _widgets =[ new Container(""),
             new Label(),
-            new Bar2D(this,"","",""),
-            new Line2D(this, "","",""),
-            new MSLine2D(this, "","",""),
-            new Column2D(this, "","",""),
-            new Pie2D(this, "","",""),
+            new Bar2D(this,"","","",""),
+            new Line2D(this, "","","",""),
+            new MSLine2D(this,"", "","",""),
+            new Column2D(this, "","","",""),
+            new Pie2D(this, "","","",""),
             new GridWidget(this),
             new ImageWidget(),           
             new KPIWidget(this,""),
@@ -35,9 +36,7 @@ export class UIDesignerService {
     getWidget(type:string):Widget{
         return this._widgets[type];
     }
-  /*  createDashDesc(dbDesc: RawDashData){
-        let dbRef = firebase.database().ref(Constants.DASHBOARD_REF);                
-    }*/
+
     getUserObjRef():firebase.database.Reference{
         let userKey = firebase.auth().currentUser.uid;           
         let userObjRef = firebase.database().ref(Constants.DASHBOARD_REF).child(userKey);
@@ -86,40 +85,20 @@ export class UIDesignerService {
             });
         });           
         return promise;                                   
-    }
+    }  
 
-    editDashDesc(dbDesc: RawDashData){
-      /*  let dbRef = firebase.database().ref('products/').child(update.id)
-            .update({
-                name: update.name,
-                desc: update.description,
-                price: update.price
-            });
-        alert('product updated');   */    
-    }
-
-    removeDashDesc(dbDesc: RawDashData){
-      /*  let dbRef = firebase.database().ref('products/').child(deleteProduct.id).remove();
-        alert('product deleted');
-        let imageRef = firebase.storage().ref().child(`product_images/${deleteProduct.imgTitle}`)
-            .delete()
-                .then(function() {
-                    alert(`${deleteProduct.imgTitle} was deleted from Storage`);
-                }).catch(function(error) {
-                    alert(`Error - Unable to delete ${deleteProduct.imgTitle}`);
-                });*/
-    }
-
-    generateChartDataSource(dataSource:DataSource,keyAttr:string,valAttr:string, depPropName?:any, depPropExp?:any, filter?:any):any
+    generateChartDataSource(widget:FusionWidget, dataSource:DataSource,labelAttr:string,keyAttr:string,valAttr:string, depPropName?:any, depPropExp?:any, filter?:any):any
     {     
         //debugger;  
-        if (dataSource.name == "sampleColumn2D"||dataSource.name =="sampleBar2D"||dataSource.name =="samplePie2D") //single series Webservice
+        if (dataSource.format == "SingleSeries" && dataSource.url) //single series Webservice
         {                       
             var chartData:any =  {
                 "depPropName":depPropName,
                 "depPropExp":depPropExp,
                 "chart": {
-                    "caption": "",
+                    "caption": widget.caption,
+                    "xAxisName": widget.xAxisName,
+                    "yAxisName": widget.yAxisName,                    
                     "subCaption": "",                     
                 },                 
             }; 
@@ -133,7 +112,7 @@ export class UIDesignerService {
                     if (isMatch && keyAttr && keyAttr.length>0 && valAttr && valAttr.length>0)
                     { 
                         chartData.data.push({                    
-                                            "label": x[i][keyAttr],
+                                            "label": x[i][labelAttr],
                                             "value": x[i][valAttr], //todo
                                             "key":x[i].key
                                         }
@@ -143,13 +122,15 @@ export class UIDesignerService {
             });
             return chartData;  
         }       
-        else if (  dataSource.name =="sampleLine2D" ) //multi series WebService
+        else if (  dataSource.format == "MultiSeries" && dataSource.url) //multi series WebService
         {          
             var chartData:any =  {
                 "depPropName":depPropName,
                 "depPropExp":depPropExp,
                 "chart": {
-                    "caption": "",
+                    "caption": widget.caption,
+                    "xAxisName": widget.xAxisName,
+                    "yAxisName": widget.yAxisName,    
                 },
                 "categories": [
                     {
@@ -175,7 +156,7 @@ export class UIDesignerService {
                         {
                             ds.data.push({"value":x[i].values[j][valAttr]});
                             if (i==0){
-                                chartData.categories[0].category.push({"label":x[i].values[j][keyAttr]})
+                                chartData.categories[0].category.push({"label":x[i].values[j][labelAttr]})
                             }
                         }
                     }
@@ -185,14 +166,16 @@ export class UIDesignerService {
             });
             return chartData
         }
-        else //multiseries CSV
+        else if (dataSource.file)//multiseries CSV
         {
             //itt tudni kell, h single vagy multiseries lesz
             var chartData:any =  {  
                     "depPropName":depPropName,
                     "depPropExp":depPropExp,
                     "chart": {
-                        "caption": "",
+                        "caption": widget.caption,
+                        "xAxisName": widget.xAxisName,
+                        "yAxisName": widget.yAxisName,    
                     },
                     "categories": [
                         {
@@ -209,7 +192,7 @@ export class UIDesignerService {
             dataSource.load(function(x:any){
                 debugger;
                 var data = that.csvJSON(x, true,  dataSource.csvSkip, dataSource.csvSeparator);
-                chartData.dataset[0].sriesname=data.headers[keyAttr];
+                chartData.dataset[0].sriesname=data.headers[labelAttr];
                 var de:DependencyExp = null;
                 if (depPropExp.length > 0){
                     de= new DependencyExp(depPropExp,filter);
@@ -221,7 +204,7 @@ export class UIDesignerService {
                     {  
                         if (data.rows[i][valAttr])
                         {                            
-                            chartData.categories[0].category.push({"label":data.rows[i][keyAttr]});
+                            chartData.categories[0].category.push({"label":data.rows[i][labelAttr]});
                             chartData.dataset[0].data.push(
                                 {"value":data.rows[i][valAttr].replace(/"/g, '').replace(/'/g, ''),
                                 "key":  data.rows[i][keyAttr]});    //todo ha nincs neki id-ja akkor value                      

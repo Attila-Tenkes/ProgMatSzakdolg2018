@@ -1,6 +1,6 @@
 import { Constants} from '../shared/constants';
 import { Helpers} from '../shared/helpers';
-import { Widget, Container , WidgetFact, ImageWidget,DataSourcedWidget, SingleSeriesFusionWidget, Label, KPIWidget} from '../models/widget';
+import { Widget, Container , WidgetFact, ImageWidget,DataSourcedWidget, FusionWidget,   SingleSeriesFusionWidget, Label, KPIWidget} from '../models/widget';
 import { DashMeta} from '../models/dashmeta';
 import { UIDesignerService } from '../services/designer.service';
 import { DataSourceService } from '../services/dataSource.service';
@@ -40,8 +40,12 @@ export class RawDashData {
            
            if (json.DependencyPropertyName){this.widget["DependencyPropertyName"] = json.DependencyPropertyName;}
            if (json.DependencyPropertyExpression){this.widget["DependencyPropertyExpression"] = json.DependencyPropertyExpression;}   
+           if (json.labelAttr){this.widget["labelAttr"] = json.labelAttr;}
            if (json.keyAttr){this.widget["keyAttr"] = json.keyAttr;}
            if (json.valAttr){this.widget["valAttr"] = json.valAttr;}
+           if (json.caption){this.widget["caption"] = json.caption;}
+           if (json.xAxisName){this.widget["xAxisName"] = json.xAxisName;}
+           if (json.yAxisName){this.widget["yAxisName"] = json.yAxisName;}
            if (json.fontWeight){this.widget["fontWeight"] = json.fontWeight;}
            if (json.fontSize){this.widget["fontSize"] = json.fontSize;}      
            if (json.fontColor){this.widget["fontColor"] = json.fontColor;}
@@ -103,9 +107,14 @@ export class RawDashData {
             if ( this.widget instanceof DataSourcedWidget){
                 result.dataSourceID = this.widget.dataSourceID;
             }
-            if ( this.widget instanceof SingleSeriesFusionWidget){
+            if ( this.widget instanceof FusionWidget){
+                result.labelAttr = this.widget["labelAttr"];
                 result.keyAttr = this.widget["keyAttr"];
                 result.valAttr = this.widget["valAttr"];
+                result.caption = this.widget["caption"];
+                result.xAxisName = this.widget["xAxisName"];
+                result.yAxisName = this.widget["yAxisName"];
+                
             }
             if ( this.widget.hasOwnProperty("DependencyPropertyName")){           
                 result.DependencyPropertyName = this.widget["DependencyPropertyName"]
@@ -218,7 +227,7 @@ export class DecoratedDashData{
                 parentNode.cells = [];
             }
             let newControl = new RawDashData();
-            newControl.domId = Helpers.NextID();
+            newControl.domId = Helpers.NextID();            
             newControl.widget = WidgetFact.createWidget({type:props.type}, this.dataService);
             newControl.widget.visibleOrder = parentNode.cells.length;
             parentNode.cells.push(newControl )	;

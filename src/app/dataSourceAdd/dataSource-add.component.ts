@@ -64,5 +64,5 @@ export class DataSourceAddComponent {
     cancel(){
         this._parent.chooseMode('');        
     } 
-
+    test(){}
 }

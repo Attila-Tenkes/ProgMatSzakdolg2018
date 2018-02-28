@@ -50,6 +50,15 @@
                         <div *ngSwitchCase="'visibleOrder'">
                                 <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey3($event)">                         
                         </div> 
+                        <div *ngSwitchCase="'caption'">
+                                <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey4($event)">                         
+                        </div>
+                        <div *ngSwitchCase="'xAxisName'">
+                                <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey4($event)">                         
+                        </div>
+                        <div *ngSwitchCase="'yAxisName'">
+                                <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey4($event)">                         
+                        </div>
                         <div *ngSwitchDefault>
                             <input type="text" [(ngModel)]="root.selected.widget[prop]" >                         
                         </div>  
