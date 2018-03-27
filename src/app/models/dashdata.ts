@@ -31,15 +31,15 @@ export class RawDashData {
         this.cells= cells||[];
     } 
 
-    fromJSON(json: any, dataService:UIDesignerService,context?: any):any{
+    fromJSON(json: any, dataService:UIDesignerService,context?: any, meta?:DashMeta):any{
            this.name = json.name?json.name:'';
            this.description = json.description?json.description:'';
            this.customCss = json.customCss?json.customCss:'';                     
            this.domId = json.domId?json.domId:'';
-           this.widget = WidgetFact.createWidget(json, dataService, context); 
+           this.widget = WidgetFact.createWidget(json, dataService, context, meta); 
            
-           if (json.DependencyPropertyName){this.widget["DependencyPropertyName"] = json.DependencyPropertyName;}
-           if (json.DependencyPropertyExpression){this.widget["DependencyPropertyExpression"] = json.DependencyPropertyExpression;}   
+           if (json.DependencyProperty){this.widget["DependencyProperty"] = json.DependencyProperty;}
+           if (json.DependencyExpression){this.widget["DependencyExpression"] = json.DependencyExpression;}   
            if (json.labelAttr){this.widget["labelAttr"] = json.labelAttr;}
            if (json.keyAttr){this.widget["keyAttr"] = json.keyAttr;}
            if (json.valAttr){this.widget["valAttr"] = json.valAttr;}
@@ -54,12 +54,16 @@ export class RawDashData {
            if (json.lowerTreshhold){this.widget["lowerTreshhold"] = json.lowerTreshhold;}      
            if (json.lowerColor){this.widget["lowerColor"] = json.lowerColor;}
            if (json.calculation){this.widget["calculation"] = json.calculation;}
+           if (json.labelStep){this.widget["labelStep"] = json.labelStep;}
+           if (json.drawAnchors!=undefined){this.widget["drawAnchors"] = json.drawAnchors;}
+           if (json.showValue!=undefined){this.widget["showValue"] = json.showValue;}
+         
            this.cells= [];
            if (json.cells)
            {
             for (let i=0;i<json.cells.length;i++){
                 let x:RawDashData = new RawDashData();
-                this.cells.push(x.fromJSON(json.cells[i], dataService,context));              
+                this.cells.push(x.fromJSON(json.cells[i], dataService,context, meta));              
             }
             //sort cells
             this.cells = this.cells.sort(function(a, b) {
@@ -68,7 +72,7 @@ export class RawDashData {
            }  
            return this;     
     }  
-    toJSON():any{
+    toJSON():any{       
       let result:any = {
             name: this.name,
             description : this.description,
@@ -113,15 +117,28 @@ export class RawDashData {
                 result.valAttr = this.widget["valAttr"];
                 result.caption = this.widget["caption"];
                 result.xAxisName = this.widget["xAxisName"];
-                result.yAxisName = this.widget["yAxisName"];
-                
+                result.yAxisName = this.widget["yAxisName"];                
             }
-            if ( this.widget.hasOwnProperty("DependencyPropertyName")){           
-                result.DependencyPropertyName = this.widget["DependencyPropertyName"]
+            if ( this.widget.hasOwnProperty("labelStep")){           
+                result.labelStep = this.widget["labelStep"]
             }
-
-            if ( this.widget.hasOwnProperty("DependencyPropertyExpression")){           
-                result.DependencyPropertyExpression = this.widget["DependencyPropertyExpression"]
+            if ( this.widget.hasOwnProperty("drawAnchors")){           
+                result.drawAnchors = this.widget["drawAnchors"]
+            }
+            if ( this.widget.hasOwnProperty("showValue")){           
+                result.showValue = this.widget["showValue"]
+            }
+            if ( this.widget.hasOwnProperty("DependencyProperty")){           
+                result.DependencyProperty = this.widget["DependencyProperty"]
+            }
+            if ( this.widget.hasOwnProperty("DependencyProperty")){           
+                result.DependencyProperty = this.widget["DependencyProperty"]
+            }
+            if ( this.widget.hasOwnProperty("DependencyExpression")){           
+                result.DependencyExpression = this.widget["DependencyExpression"]
+            }
+            if ( this.widget.hasOwnProperty("owner")){           
+                result.owner = this.widget["owner"]
             }
             for (let i=0;i<this.cells.length;i++)
             {                
@@ -209,7 +226,7 @@ export class DecoratedDashData{
     }
     sortChildren(node:RawDashData)
     {
-        debugger;
+        //debugger;
         //var node = this.lookupNode(this._rawData, x=>x.domId == itemToMove);
         if (node){
             var parent = this.lookupParentNode(this._rawData, this._rawData, node.domId);                       
@@ -219,7 +236,7 @@ export class DecoratedDashData{
         }
     }
     add(parentDomId:string, props:any):RawDashData{		
-        debugger;
+        //debugger;
         var parentNode = this.lookupNode(this._rawData,x=>x.domId == parentDomId );
         if (parentNode){	
             if (!parentNode.cells)	

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { DataSource } from '../models/datasource';
 import { Constants} from '../shared/constants';
+import notify from 'devextreme/ui/notify';
 @Injectable()
 
 export class DataSourceService {
@@ -29,9 +30,9 @@ export class DataSourceService {
             });                       
             //todo error handling        
     }
-    getUserObjRef():firebase.database.Reference{
+    getUserObjRef(usr?: string):firebase.database.Reference{
         let userKey = firebase.auth().currentUser.uid;           
-        let userObjRef = firebase.database().ref(Constants.DATA_SOUURCE_REF).child(userKey);
+        let userObjRef = firebase.database().ref(Constants.DATA_SOUURCE_REF).child(usr?usr:userKey);
         return userObjRef;
     }
     editDataSource(update: DataSource){
@@ -48,7 +49,7 @@ export class DataSourceService {
                 csvSeparator:update.csvSeparator==undefined?null:update.csvSeparator,
                 csvSkip:update.csvSkip==undefined?null:update.csvSkip
              });
-        alert('DataSource updated');       
+             notify("DataSource updated", "Success", 2000);    
     }
 
     removeDataSource(deleteDataSource: DataSource){     
@@ -61,7 +62,7 @@ export class DataSourceService {
                 }
             });     
     
-        alert('DataSource deleted');       
+            notify("DataSource deleted", "Success", 2000);           
     }
 
     getDataSources(callback: (a:firebase.database.DataSnapshot, b?: string)=>any){
@@ -72,49 +73,66 @@ export class DataSourceService {
     }
     getDataSourcesOnce():Promise<DataSource[]>{
         let dbRef = this.getUserObjRef() ;
-        let promise =  new Promise<DataSource[]>((resolve,reject)=>{          
+        let promise =  new Promise<DataSource[]>((resolve,reject)=>{      
+                let dss:DataSource[] = [];  
                 dbRef.once('value')
-                .then((snapshot)=> {
-                    let tmp: string[] = snapshot.val();               
-                    let dss = Object.keys(tmp).map(key => new DataSource (
-                        tmp[key].name,
-                        tmp[key].desc,
-                        tmp[key].typename,
-                        tmp[key].format,
-                        tmp[key].id,                   
-                        tmp[key].user,
-                        tmp[key].pwd,
-                        tmp[key].file,
-                        tmp[key].url,
-                        tmp[key].csvSeparator,
-                        tmp[key].csvSkip,
-                        ));
-                        resolve(dss);            
+                .then((snapshot)=> {                       
+                    if (snapshot.val()) 
+                    {
+                        let tmp: string[] = snapshot.val(); 
+                        dss = Object.keys(tmp).map(key => new DataSource (
+                            tmp[key].name,
+                            tmp[key].desc,
+                            tmp[key].typename,
+                            tmp[key].format,
+                            tmp[key].id,                   
+                            tmp[key].user,
+                            tmp[key].pwd,
+                            tmp[key].file,
+                            tmp[key].url,
+                            tmp[key].csvSeparator,
+                            tmp[key].csvSkip,
+                            ));                           
+                    } 
+                    else {
+                        console.log('getDataSourcesOnce no data found')                        
+                    }    
+                    resolve(dss);       
                 });            
         });         
         return promise; 
     }
     
-    get(id:string):Promise<DataSource>{            
-        let dbRef = this.getUserObjRef().child(id); 
+    get(id:string, owner?: string):Promise<DataSource>{            
+        let dbRef = this.getUserObjRef(owner).child(id); 
+        //debugger;
         let promise =  new Promise<DataSource>((resolve,reject)=>{          
                 dbRef.once('value')
                 .then((snapshot)=> {
-                    let tmp: any = snapshot.val();               
-                    let ds = new DataSource (
-                        tmp.name,
-                        tmp.desc,
-                        tmp.typename,
-                        tmp.format,
-                        tmp.id,                   
-                        tmp.user,
-                        tmp.pwd,
-                        tmp.file,
-                        tmp.url,
-                        tmp.csvSeparator,
-                        tmp.csvSkip
-                    );
-                    resolve(ds);            
+                    let tmp: any = snapshot.val();   
+                    //debugger; 
+                    if (tmp)
+                    {           
+                        let ds = new DataSource (
+                            tmp.name,
+                            tmp.desc,
+                            tmp.typename,
+                            tmp.format,
+                            tmp.id,                   
+                            tmp.user,
+                            tmp.pwd,
+                            tmp.file,
+                            tmp.url,
+                            tmp.csvSeparator,
+                            tmp.csvSkip
+                        );
+                        resolve(ds);   
+                    }
+                    else 
+                    {
+                        console.log('data source can not be found');
+                        reject();
+                    }         
                 });            
         }); 
         return promise;                                  

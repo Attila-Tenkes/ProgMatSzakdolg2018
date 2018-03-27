@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { UIDesignerService } from '../services/designer.service';
 import { DashMeta } from '../models/dashmeta';
 import { DashboardAdminComponent } from '../dashboardAdmin/dashboard-admin.component';
+import * as firebase from 'firebase';
+import notify from 'devextreme/ui/notify';
 
 @Component({
     selector: 'dashboard-editor',
@@ -19,13 +21,16 @@ export class DashboardAddComponent {
     }
     
     createDashboard(){
+        let userKey = firebase.auth().currentUser.uid;      
         this.dashboard = new DashMeta ( 
+            this.designerSVC,
             this.name, 
             this.description,  
             false         
         );
-        this.designerSVC.createDashMeta(this.dashboard);
-        alert(`${this.name} added`);
+        this.dashboard.owner = userKey;
+        this.designerSVC.createDashMeta(this.dashboard);        
+        notify(`${this.name} added`,"Success",2000);
        // this.router.navigate(['/myDashboards']);
         this._parent.chooseMode('');
     }    

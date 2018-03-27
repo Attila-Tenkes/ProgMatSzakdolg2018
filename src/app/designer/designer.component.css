@@ -1,3 +1,28 @@
 .widget-title{
     font-weight: bold;
 }
+
+.widgetTitle{
+    margin:15px;  
+    border: none !important ; 
+    font-weight:bold;
+    color:#555;
+    display: inline-block;
+    width:200px;
+}
+.widgetIcon{    
+    border: none !important;  
+}
+.hh :hover{
+    border:  solid 1px rgb(41, 48, 88);
+}
+.navItem{
+	list-style-type: none;
+	margin:5px;
+}
+.propTitle{
+    margin:15px;  
+    border: none !important ; 
+    font-weight:bold;
+    color:#555;
+}

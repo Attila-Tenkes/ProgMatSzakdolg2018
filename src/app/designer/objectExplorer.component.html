@@ -1,9 +1,8 @@
 <div *ngIf="node">   
         <ul>
-        <li (click)="selectItem($event, node)" [class]="css(node)"  [attr.domId]="domID(node)" (contextmenu)="contextMenu($event, node)">
-                <!-- <p>{{domID(node)}}</p> -->
+        <li (click)="selectItem($event, node)" [class]="css(node)"  [attr.domId]="domID(node)" (contextmenu)="contextMenu($event, node)">                
                 <ng-container *ngIf="node.widget">
-                                {{node.widget.title}}: {{node.widget.typename}} 
+                        {{node.widget.title}}: {{node.widget.typename}} 
                 </ng-container>
                 <div *ngIf="node.cells">
                         <div *ngFor="let child of node.cells">

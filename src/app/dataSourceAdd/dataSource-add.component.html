@@ -106,3 +106,20 @@
     </div>
 
 </form>
+<dx-popup
+        class="popup"
+        [width]="300"  
+        [height]="450"      
+        [showTitle]="true"
+        title="Test result"
+        [shading]="true"
+        [dragEnabled]="false"
+        [closeOnOutsideClick]="false"
+        [(visible)]="isTestPopupVisible">
+        <div *dxTemplate="let data of 'content'">            
+             
+                <span>{{testResult}}</span>                         
+            
+            <dx-button class="button secondary" text="Close" (onClick)="ShowHidePopup(false)"></dx-button>
+        </div>
+</dx-popup>

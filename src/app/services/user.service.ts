@@ -7,7 +7,7 @@ import {
 } from '@angular/router';
 import * as firebase from 'firebase';
 import { Constants} from '../shared/constants';
-
+import notify from 'devextreme/ui/notify';
 
 @Injectable()
 export class UserService implements CanActivate {
@@ -40,8 +40,8 @@ export class UserService implements CanActivate {
 
     register(email: string, password: string){
         firebase.auth().createUserWithEmailAndPassword(email, password)
-            .catch(function(error) {
-                alert(`${error.message} Please Try Again!`);
+            .catch(function(error) {                
+                notify(`${error.message} Please Try Again!`,"Error",2000);
         });
     }
 
@@ -76,8 +76,8 @@ export class UserService implements CanActivate {
 
     login(loginEmail: string, loginPassword: string) {
         firebase.auth().signInWithEmailAndPassword(loginEmail, loginPassword)
-            .catch(function(error) {
-                alert(`${error.message} Unable to login. Try again!`);
+            .catch(function(error) {                
+                notify(`${error.message} Unable to login. Try again!`,"Error",2000);
         });
     }
 
@@ -85,12 +85,13 @@ export class UserService implements CanActivate {
         this.userLoggedIn = false;
         var that = this;
         firebase.auth().signOut().then(function() {
-            alert(`Logged Out!`);            
+            notify(`Logged Out!`,"Info", 2000);    
+                
             that.router.navigate(['/']);
             that.userLoggedIn=false;
             that.loggedInUser=null;
-        }, function(error) {
-            alert(`${error.message} Unable to logout. Try again!`);
+        }, function(error) {            
+            notify(`${error.message} Unable to logout. Try again!`,"Error",2000);
         });
     }
     getUsersRef():firebase.database.Reference{

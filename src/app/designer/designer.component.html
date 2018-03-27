@@ -36,7 +36,7 @@
         [(visible)]="isToolbarPopupVisible"        
         (onTitleRendered)="doTheMagic()">
         <div *dxTemplate="let data of 'content'">            
-            <ctlToolbar [node]="_root" [root]="_data"> </ctlToolbar>
+            <ctlToolbar [node]="_root" [root]="_data"> </ctlToolbar>            
             <dx-button text="Close" (onClick)="showHideToolbar(false)" class="button secondary"></dx-button>            
         </div>
     </dx-popup>
@@ -68,7 +68,7 @@
     </dx-popup>
 
 
-     <dx-popup
+    <dx-popup
         class="popup"
         [width]="500"              
         [showTitle]="true"
@@ -93,18 +93,6 @@
             <dx-button text="Close" (onClick)="showHideExplorer(false)"  class="button secondary"></dx-button>
         </div>
     </dx-popup>
-       <!-- <div id='dbObjExplorer' style="width: 300px;">	
-            <ctlExplorer [node]="_root" [root]="_data"> </ctlExplorer>
-            <a class="button" (click)="closeExplorer()">Close</a>  
-        </div>-->
-
-       <!-- <div id='dbObjInspector'>
-            <ctlObjectInspector  [node]="_root" [root]="_data"> </ctlObjectInspector>
-        </div>-->
-
-
-
-
     </ng-container>
 </div>
     

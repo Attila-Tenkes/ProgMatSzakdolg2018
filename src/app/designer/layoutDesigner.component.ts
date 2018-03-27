@@ -130,11 +130,11 @@ export class LayoutDesignerComponent {
     onDateChanged(event:any, widget:any)
     {
         debugger;        
-        this.dependenyProperties[widget.DependencyPropertyName] = event.value; 
+        this.dependenyProperties[widget.DependencyProperty] = event.value; 
         this.root.visitAll(
                                 (node:RawDashData,arg:any)=>{
                                 if (node.widget 
-                                    && node.widget["DependencyPropertyExpression"]!=undefined 
+                                    && node.widget["DependencyExpression"]!=undefined 
                                     //&& node.widget instanceof widgets.DependencyReceiver
                                 )
                                 {                                     
@@ -146,7 +146,7 @@ export class LayoutDesignerComponent {
     }
     onDataplotClick() {
         var _this = this;
-        debugger;
+        //debugger;
         return (eve:any, arg:any) => {          
             
             _this.selectedValue = arg.displayValue;
@@ -159,7 +159,7 @@ export class LayoutDesignerComponent {
                     _this.root.visitAll(
                                 (node:RawDashData,arg:any)=>{
                                 if (node.widget 
-                                    && node.widget["DependencyPropertyExpression"]!=undefined 
+                                    && node.widget["DependencyExpression"]!=undefined 
                                     //&& node.widget instanceof widgets.DependencyReceiver
                                 )
                                 {                                     

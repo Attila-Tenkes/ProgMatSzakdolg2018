@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase';
@@ -10,6 +10,7 @@ import { Constants} from '../shared/constants';
 import { DxSelectBoxModule, DxCheckBoxModule, DxListModule } from 'devextreme-angular';
 import DxDataSource  from 'devextreme/data/data_source';
 import ArrayStore from 'devextreme/data/array_store';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   templateUrl: './dashboard-admin.component.html',
@@ -27,10 +28,20 @@ export class DashboardAdminComponent implements OnInit {
     allUsersExceptLoggedIn: UserData[];    
     isUserPopupVisible:boolean=false;
     selectedItems: any[] = [];
-    userKey:string;
+    userKey:string;    
+
 
     ShowHidePopup(value: boolean, dash?:any){      
         this.singleDashboard = dash;
+        this.selectedItems = [];
+        var that = this;
+        //get readers
+        if (this.singleDashboard && value==true){
+            dash.refreshReaders( 
+                function(items:any){
+                    that.selectedItems=items;                                                           
+                });            
+        }
         this.isUserPopupVisible=value;
     }
 
@@ -78,12 +89,15 @@ export class DashboardAdminComponent implements OnInit {
         var that = this;        
         this.designerSVC.getDashMetas( function(snapshot) {
             let tmp: string[] = snapshot.val();                  
-            that.theDashboards = Object.keys(tmp).map(key => new DashMeta(tmp[key].name, tmp[key].desc,tmp[key].readOnly,tmp[key].id));             
+            that.theDashboards = Object.keys(tmp).map(key => 
+                new DashMeta(that.designerSVC,tmp[key].name, tmp[key].desc,
+                    tmp[key].readOnly,tmp[key].id,
+                    tmp[key].owner?tmp[key].owner:'unknown'));             
         });       
     }
     
     shareDashboard(theDashboard?: DashMeta){
-        debugger;
+        //debugger;
         this.isUserPopupVisible = false;
         this.shareDataSource(theDashboard, this.selectedItems);
         //todo userSvc.callSave
@@ -94,35 +108,13 @@ export class DashboardAdminComponent implements OnInit {
       this.designerSVC.getRawDash(update.id,this)
        .then(raw=>        
             {           
-                debugger;                
+                //debugger;                
                 var users = readers.filter(reader => reader.id!=this.userKey);       
                 var uids = Object.keys(users).map(key => users[key].id);     
-                this.designerSVC.updateReaders(update, raw,  uids, this.allUsersExceptLoggedIn);
-                //todo move it into service
-              /*  Object.keys(this.allUsersExceptLoggedIn).map(key =>
-                {           
-                    //if (this.allUsers[key].id!==this.userKey) {
-                        let userObjRef = firebase.database().ref(Constants.DASHBOARD_REF).child( this.allUsersExceptLoggedIn[key].id);
-
-                        if (uids.indexOf(this.allUsers[key].id)>-1)
-                        {
-                            //make copies?
-                            userObjRef.child(update.id).update(
-                                { id:update.id, name:update.name, desc:update.description,readOnly:true, raw: x.toJSON()}
-                            );
-                        }
-                        else
-                        {
-                            //revoke
-                            userObjRef.child(update.id).remove();
-                        }
-                    //}
-                });      */       
+                this.designerSVC.updateReaders(update, raw,  uids, this.allUsersExceptLoggedIn);                   
             }
        );
-        
-                          
-        alert('shared');       
+       notify("Successfully saved!", "Success", 2000);                                  
     }
         
 
@@ -154,12 +146,18 @@ export class DashboardAdminComponent implements OnInit {
             this.designerSVC.removeDashMeta(singleDashboard);            
             this.router.navigate(['/myDashboards']);
         } else {
-            alert('Nothing deleted!');
+            notify("Nothing deleted!", "Info", 2000);
         }
     } 
 
-    selectedUsers(){
-        return this.selectedItems.map(function(x){return x.name}).join(", ");
+    selectedUsers(){        
+        let readers:UserData[] = [];
+        //var res:string = '';
+        for(var i:number=0;i< this.selectedItems.length;i++) {
+            readers =readers.concat(this.allUsers.filter(usr=>usr.id==this.selectedItems[i]));
+            // res+=this.allUsers.filter(usr=>usr.id==this.selectedItems[i].id).name;
+        };
+        return readers.map(function(x:UserData){return x.name}).join(", ");
     }
 
     shareTitle(){

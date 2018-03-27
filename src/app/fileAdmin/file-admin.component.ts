@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import * as firebase from 'firebase';
 import { FileService } from '../services/file.service';
 import { DashFile } from '../models/dashfile';
+import notify from 'devextreme/ui/notify';
 
 @Component({
   templateUrl: './file-admin.component.html',
@@ -115,8 +116,8 @@ export class FileAdminComponent implements OnInit {
         if (verify == true) {
             this.fileAdminSVC.removeFile(singleFile);
             this.router.navigate(['/myFiles']);
-        } else {
-            alert('Nothing deleted!');
+        } else {            
+            notify("Nothing deleted!","Info",2000);
         }
     }
 

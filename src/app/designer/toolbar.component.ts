@@ -10,7 +10,8 @@ import { RawDashData,  DecoratedDashData } from '../models/dashdata';
 declare var $:any;
 @Component({   
     selector:'ctlToolbar',
-    templateUrl: './toolbar.component.html'    
+    templateUrl: './toolbar.component.html',
+    styleUrls: ['./designer.component.css'],
 })
 
 export class ToolbarComponent {

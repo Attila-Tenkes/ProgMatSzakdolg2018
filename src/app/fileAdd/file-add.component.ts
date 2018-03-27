@@ -4,6 +4,7 @@ import { FileService } from '../services/file.service';
 import { DashFile } from '../models/dashfile';
 import {Constants}from '../shared/constants';
 import { FileAdminComponent}from '../fileAdmin/file-admin.component';
+import notify from 'devextreme/ui/notify';
 
 @Component({
     selector: 'file-editor',
@@ -49,8 +50,8 @@ export class FileAddComponent {
             this.imgTitle, 
             this.contents
         );
-        this.fileAdminSVC.createFile(this.file);
-        alert(`${this.name} added`);
+        this.fileAdminSVC.createFile(this.file);        
+        notify(`${this.name} added`, "Success", 2000);
         //this.router.navigate(['/myFiles']);
          this._parent.chooseMode('');
     }    

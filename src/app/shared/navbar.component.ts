@@ -13,13 +13,13 @@ import {UserService} from '../services/user.service';
                    
                 </div>
                     
-                <div class="top-bar">    
+                <div class="top-bar top-bar-menu">    
                     <div class="top-bar-left">                   
                         <div *ngIf = "theUser" class="top-bar-right">
                             <ul class="menu">
-                                <li class="nav-menu"><a [routerLink]="['/myDashboards']">My Dashboards</a></li>
-                                <li class="nav-menu"><a [routerLink]="['/myFiles']">My Files</a></li>
-                                <li class="nav-menu"><a [routerLink]="['/myDataSources']">My Data Sources</a></li>                           
+                                <li class="nav-menu"><a [routerLink]="['/myDashboards']">Dashboards</a></li>
+                                <li class="nav-menu"><a [routerLink]="['/myFiles']">Files</a></li>
+                                <li class="nav-menu"><a [routerLink]="['/myDataSources']">Data Sources</a></li>                           
                                 <li class="nav-menu"><a (click)="logout()">Logout</a></li>
                             
                             </ul>
@@ -31,7 +31,7 @@ import {UserService} from '../services/user.service';
                         </ul>
                     </div>
                     <div class="top-bar-right">
-                        Welcome {{theUser}}
+                        {{Welcome}} {{theUser}}
                     </div> 
                 </div>                                                        
             </div>
@@ -41,11 +41,14 @@ import {UserService} from '../services/user.service';
 })
 export class NavComponent implements OnInit { 
     theUser: string; 
+    Welcome:string;
     constructor( private userSVC: UserService, private router: Router){}
     ngOnInit(){
-        this.theUser = this.userSVC.loggedInUser;
-      }
-      logout(){        
+        this.theUser = this.userSVC.loggedInUser;        
+        this.Welcome = this.theUser?"Welcome":"";        
+    }
+    
+    logout(){        
         this.userSVC.logout();       
-      }      
+    }      
 }

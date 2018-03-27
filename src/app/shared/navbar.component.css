@@ -24,3 +24,6 @@
 .top-bar, .top-bar ul {
      background-color:rgba(5, 5, 5, .05);
 }
+.top-bar-menu{
+    background-color: rgba(205, 205, 205, 0.2)
+}

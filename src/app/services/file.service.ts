@@ -2,10 +2,13 @@ import { Injectable } from '@angular/core';
 import * as firebase from 'firebase';
 import { DashFile } from '../models/dashfile';
 import { Constants} from '../shared/constants';
+import notify from 'devextreme/ui/notify';
 
 @Injectable()
 
 export class FileService {  
+    constructor() {             
+    }
     getUserObjRef():firebase.database.Reference{
         let userKey = firebase.auth().currentUser.uid;           
         let userObjRef = firebase.database().ref(Constants.FILE_REF).child(userKey);
@@ -44,7 +47,7 @@ export class FileService {
                 });         
             })
             .catch ((error)=>{
-                alert(`failed upload: ${error}`);
+                notify(`failed upload: ${error}`,"Error",2000);
             });       
     }
 
@@ -54,21 +57,21 @@ export class FileService {
             .update({
                 displayName: update.name,
                 desc: update.description
-            });
-        alert('file updated');       
+            });         
+        notify("File deleted","Success",2000);   
     }
 
     removeFile(deleteFile: DashFile){
-        debugger;
+        //debugger;
         let subfolder: string = this.getSubfolder(deleteFile);
         let dbRef = this.getUserObjRef().child(`${subfolder}`).child(deleteFile.id).remove();
-        alert('file deleted');        
+        notify("File deleted","Success",2000);      
         let imageRef = firebase.storage().ref().child(`${subfolder}/${deleteFile.fileName}`)
             .delete()
-                .then(function() {
-                    alert(`${deleteFile.fileName} was deleted from Storage`);
-                }).catch(function(error) {
-                    alert(`Error - Unable to delete ${deleteFile.fileName}`);
+                .then(function() {                    
+                    notify(`${deleteFile.fileName} was deleted from Storage`,"Success",2000);
+                }).catch(function(error) {                    
+                    notify(`Error - Unable to delete ${deleteFile.fileName}`,"Error",2000);
                 });
     }
 
@@ -78,16 +81,20 @@ export class FileService {
         let promise =  new Promise<DashFile[]>((resolve,reject)=>{       
                 dbRef.once('value')
                 .then((snapshot)=> {
-                    let tmp: string[] = snapshot.val();               
-                    let files = Object.keys(tmp).map(key => new DashFile (
-                        tmp[key].displayName,
-                        tmp[key].desc,
-                        tmp[key].fileName,
-                        null,                   
-                        tmp[key].id,
-                        tmp[key].url
+                    let tmp: string[] = []
+                    let files:DashFile[] = [];
+                    if (snapshot.val()){
+                        tmp  = snapshot.val();
+                        files = Object.keys(tmp).map(key => new DashFile (
+                            tmp[key].displayName,
+                            tmp[key].desc,
+                            tmp[key].fileName,
+                            null,                   
+                            tmp[key].id,
+                            tmp[key].url
                         ));
-                        resolve(files);            
+                    }
+                    resolve(files);             
                 });           
         });         
         return promise;           

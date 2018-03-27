@@ -127,7 +127,7 @@ _me:DesignerComponent;
             accept: ".dbWidget",
             
             drop: function( event:any, ui:any ) {
-                debugger;
+                //debugger;
                if (!ui.draggable.attr('DoNothing')){ 
                     var draggableId = ui.draggable.attr('domId');
                     var droppableId = $(this).attr("domId");	
@@ -167,70 +167,16 @@ _me:DesignerComponent;
     }
 
     save(){
-       debugger;       
+       //debugger;       
        this.designerSVC.save(this._data);
        console.log();
     }
-    /*openToolbar(){
-        $("#dbToolbar").dialog("open");        
-        console.log('openToolbar'); 
-    }  
-    makeToolbar(hidden:boolean){ 
-         //debugger;                    
-          $('#dbToolbar').dialog({title:'Toolbar', closeOnEscape: true});
-          if (hidden){
-            $('#dbToolbar').dialog("close");
-          }         
-          $("#dbToolbar").droppable({
-                        hoverClass: "ui-state-hover",
-                        greedy: true ,
-                        accept: ".dbWidget",
-                        //snap: true,
-                        drop: function( evt:any, ui:any ) {
-                            //debugger;
-                            ui.draggable.attr('DoNothing', true);
-                            ui.draggable.draggable( "option", "revertDuration", 10);
-                            ui.draggable.draggable( "option", "revert", true );
-                            evt.preventDefault();
-                            evt.stopPropagation();		
-                         }
-            });        
-    }
-
-    openPropertyEditor(hidden:boolean){
-        $("#dbObjInspector").dialog("open");
-    }
-
-    makePropEditor(hidden:boolean){	
-        $("#dbObjInspector").dialog({title:'Properties', closeOnEscape: true});
-        if (hidden){
-            $( "#dbObjInspector" ).dialog("close");
-        }
-    }
-
-    makeObjExplorer(hidden:boolean){        
-        $('#dbObjExplorer').dialog({title:'Explorer', closeOnEscape: true});
-        if (hidden){
-            $('#dbObjExplorer').dialog("close");
-        }
-    }
-
-    openExplorer(){
-        $("#dbObjExplorer").dialog("open");  
-        //this.attachJQEvents ();
-        console.log('openExplorer'); 
-    }
-    closeExplorer(){         
-        $("#dbObjExplorer").dialog("close");  
-        //this.attachJQEvents ();
-        console.log('closeExplorer'); 
-    }
-*/
 
     preview(){
         this._mode='Viewer';
         this.router.navigate(['/viewer/'+this._data.meta.id]);
     }
+    
     design(){
         this._mode='Designer';
         this.router.navigate(['/designer/'+this._data.meta.id]);

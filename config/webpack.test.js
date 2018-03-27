@@ -5,7 +5,7 @@ module.exports = {
   devtool: 'inline-source-map',
 
   resolve: {
-    extensions: ['', '.ts', '.js']
+    extensions: ['.ts', '.js']
   },
 
   module: {
@@ -16,7 +16,7 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        loader: 'html'
+        loader: 'html-loader'
 
       },
       {
@@ -31,7 +31,7 @@ module.exports = {
       {
         test: /\.css$/,
         include: helpers.root('src', 'app'),
-        loader: 'raw'
+        loader: 'raw-loader'
       }
     ]
   }

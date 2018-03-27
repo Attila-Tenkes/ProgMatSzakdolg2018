@@ -5,13 +5,14 @@ import { DataSource } from '../models/datasource';
 import { DashFile } from '../models/dashfile';
 import { DataSourceAdminComponent } from '../dataSourceAdmin/dataSource-admin.component';
 import { FileService } from '../services/file.service';
+import notify from 'devextreme/ui/notify';
 
 @Component({
     selector: 'dataSource-editor',
     templateUrl: './dataSource-add.component.html',
 })
 export class DataSourceAddComponent {
-       
+    isTestPopupVisible: boolean=false;  
     name: string;
     description: string;    
     dataSource: DataSource;    
@@ -36,7 +37,7 @@ export class DataSourceAddComponent {
     }
     onFileDDLChange(selectedFile:any) {
         console.log(selectedFile);
-        debugger;
+        //debugger;
         this.fileUrl = selectedFile;
         //todo type check        
       // (<widgets.ImageWidget> this.root.selected.widget).imgSrc = selectedImage;
@@ -57,12 +58,41 @@ export class DataSourceAddComponent {
             this.csvSkip  
         );
         this.dataSourceSVC.createDataSource(this.dataSource);
-        alert(`${this.name} added`);        
+        notify(`${this.name} added`,"Success",2000);        
         this._parent.chooseMode('');
     }    
 
     cancel(){
         this._parent.chooseMode('');        
     } 
-    test(){}
+    testResult:any;
+    test(){
+        var testDs = new DataSource( 
+            this.name, 
+            this.description,  
+            this.typename, 
+            this.format,
+            null,
+            this.user,
+            this.pwd,
+            this.fileUrl,  
+            this.webServiceUrl ,
+            this.csvSeparator,
+            this.csvSkip  
+        );
+        var that = this;
+        testDs.load(function(x:any){                      
+            var obj = { result: x};
+            if (x){ 
+                 that.testResult= JSON.stringify(x); 
+            }  
+            else {
+                that.testResult = 'failed to load';
+            }   
+            that.ShowHidePopup(true);                       
+        },true);       
+    }
+    ShowHidePopup(show:boolean){
+        this.isTestPopupVisible = show;
+    }
 }

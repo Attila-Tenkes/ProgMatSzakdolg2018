@@ -14,7 +14,8 @@ import { DesignerComponent }from './designer.component'
 
 @Component({   
     selector:'ctlObjectInspector',
-    templateUrl: './objectInspector.component.html'    
+    templateUrl: './objectInspector.component.html',
+    styleUrls: ['./designer.component.css'] 
 })
 
 export class ObjectInspectorComponent implements AfterViewInit{
@@ -39,7 +40,7 @@ export class ObjectInspectorComponent implements AfterViewInit{
     getAvailableDataSources(){
         if (this.root.selected.widget instanceof widgets.DataSourcedWidget && this.theDataSources && this.theDataSources.length>0){
             var format = (<widgets.DataSourcedWidget>this.root.selected.widget)._dataFormat;
-            var dss = this.theDataSources.filter( ds => ds.format === format);            
+            var dss = this.theDataSources.filter( ds => format.indexOf(ds.format)>= 0);            
             return  dss;
         }
         return [];        
@@ -71,13 +72,13 @@ export class ObjectInspectorComponent implements AfterViewInit{
 
         //todo type check!
         //todo keycode check
-        (<widgets.FusionWidget>this.root.selected.widget)._dataSource["depPropName"] = (<widgets.FusionWidget>this.root.selected.widget).DependencyPropertyName;
+        (<widgets.FusionWidget>this.root.selected.widget)._dataSource["depPropName"] = (<widgets.FusionWidget>this.root.selected.widget).DependencyProperty;
     }
     onKey2(event: KeyboardEvent)  {
 
         //todo type check!
         //todo keycode check
-        (<widgets.FusionWidget>this.root.selected.widget)._dataSource["depPropExp"] = (<widgets.FusionWidget>this.root.selected.widget).DependencyPropertyExpression;
+        (<widgets.FusionWidget>this.root.selected.widget)._dataSource["depPropExp"] = (<widgets.FusionWidget>this.root.selected.widget).DependencyExpression;
     }
     onKey3(event: KeyboardEvent)  {
 

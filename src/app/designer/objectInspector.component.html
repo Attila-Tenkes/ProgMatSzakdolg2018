@@ -19,8 +19,8 @@
         </ng-container> -->
         <ng-container *ngFor="let prop of getWidgetProperties()">
             <tr>
-                <td>{{prop}} </td>   
-                <td>
+                <td ><span class="propTitle">{{prop}}</span> </td>   
+                <td >
                     <div ngSwitch="{{prop}}"> 
                         <div *ngSwitchCase="'typename'">
                                 <label>{{root.selected.widget[prop]}}</label>                                    
@@ -41,10 +41,10 @@
                                 <option [ngValue]="ds.id" *ngFor="let ds of getAvailableDataSources()">{{ds.name}}</option>
                             </select>
                         </div> 
-                        <div *ngSwitchCase="'DependencyPropertyName'">
+                        <div *ngSwitchCase="'DependencyProperty'">
                             <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey($event)">                         
                         </div> 
-                        <div *ngSwitchCase="'DependencyPropertyExpression'">
+                        <div *ngSwitchCase="'DependencyExpression'">
                             <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey2($event)">                         
                         </div> 
                         <div *ngSwitchCase="'visibleOrder'">
@@ -59,9 +59,19 @@
                         <div *ngSwitchCase="'yAxisName'">
                                 <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey4($event)">                         
                         </div>
+                        <div *ngSwitchCase="'labelStep'">
+                            <input type="text" [(ngModel)]="root.selected.widget[prop]" (keyup)="onKey4($event)">                 
+                        </div>
+                        <div *ngSwitchCase="'drawAnchors'">
+                            <input type="checkbox" [(ngModel)]="root.selected.widget[prop]" (change)="onKey4($event)">   
+                        </div>
+                        <div *ngSwitchCase="'showValue'">
+                            <input type="checkbox" [(ngModel)]="root.selected.widget[prop]" (change)="onKey4($event)">   
+                        </div>
                         <div *ngSwitchDefault>
                             <input type="text" [(ngModel)]="root.selected.widget[prop]" >                         
                         </div>  
+                       
                     </div>                                                 
                 </td>
             </tr>

@@ -2,16 +2,17 @@ import { Constants } from '../shared/constants';
 import { UIDesignerService } from '../services/designer.service';
 import { DataSourceService } from '../services/dataSource.service';
 import { DataSource } from './datasource';
+import { DashMeta } from './dashmeta';
 
 
 export interface IDependencyReceiver {    
     notify(x: any):void;
-    DependencyPropertyExpression:string;    
+    DependencyExpression:string;    
 }
 
 export interface IDependencySubject {    
     update(x: any):void;
-    DependencyPropertyName: string;
+    DependencyProperty: string;
 }
 
 export class Widget {
@@ -21,6 +22,7 @@ export class Widget {
     public height:number=100;
     public width:number=100;
     public _tag:any;
+    public _meta:DashMeta;
     constructor(        
         public typename: string,        
         public _isDroppable:boolean     
@@ -77,7 +79,7 @@ export class DataSourcedWidget extends Widget  {    //hack: see layoutdesigner.t
 }
 export class DependencyReceiver extends DataSourcedWidget implements IDependencyReceiver {    //hack: see layoutdesigner.ts update()
     notify(x: any):void{}    
-    DependencyPropertyExpression:string="";   
+    DependencyExpression:string="";   
     constructor(        
         typename: string,  
         format:string,      
@@ -151,7 +153,7 @@ export class GridWidget extends DependencyReceiver  {
 
                     //if (ds !=null)
                     {
-                    that._dataSource = this._dataProvider.generateGridDataSource(dataSource,that.DependencyPropertyExpression);
+                    that._dataSource = this._dataProvider.generateGridDataSource(dataSource,that.DependencyExpression);
                     //todo ide promise kellene
                     that._isDataReady = true;
                     
@@ -161,14 +163,20 @@ export class GridWidget extends DependencyReceiver  {
                 else if (this.dataSourceID) 
                 {
                     var that = this;
-                    this._dataProvider.getDsService().get(this.dataSourceID).then(x=>
+                    var owner:any = null;
+                    if (that._meta && that._meta.owner ){
+                        owner =this._meta.owner;
+                    }
+                    this._dataProvider.getDsService().get(this.dataSourceID, owner).then(x=>
                         {
                             dataSource=x;
-                            that._dataSource = this._dataProvider.generateGridDataSource(dataSource,that.DependencyPropertyExpression,filter);               
+                            that._dataSource = this._dataProvider.generateGridDataSource(dataSource,that.DependencyExpression,filter);               
                             that._isDataReady = true;                                                         
                             resolve(that._dataSource);                            
                         }                        
-                    );            
+                    ).catch(function(){
+                        console.log('ds load error');
+                    }); ;            
                 }  
                  
          });  
@@ -224,7 +232,7 @@ export class KPIWidget extends DependencyReceiver {
 
                     //if (ds !=null)
                     {
-                    //that._dataSource = this._chartDataProvider.generateChartDataSource(dataSource, that["keyAttr"],that["valAttr"], that.DependencyPropertyName,that.DependencyPropertyExpression);
+                    //that._dataSource = this._chartDataProvider.generateChartDataSource(dataSource, that["keyAttr"],that["valAttr"], that.DependencyProperty,that.DependencyExpression);
                     //todo ide promise kellene
                     that._isDataReady = true;
                     
@@ -234,10 +242,14 @@ export class KPIWidget extends DependencyReceiver {
                 else if (this.dataSourceID) 
                 {
                     var that = this;
-                    this._chartDataProvider.getDsService().get(this.dataSourceID).then(x=>
+                    var owner:any = null;
+                    if (that._meta && that._meta.owner ){
+                        owner =this._meta.owner;
+                    }
+                    this._chartDataProvider.getDsService().get(this.dataSourceID,owner).then(x=>
                         {
                             dataSource=x;
-                           // that._dataSource = this._chartDataProvider.generateKPIDataSource(dataSource,that["keyAttr"],that["valAttr"],that.DependencyPropertyName,that.DependencyPropertyExpression,filter);               
+                           // that._dataSource = this._chartDataProvider.generateKPIDataSource(dataSource,that["keyAttr"],that["valAttr"],that.DependencyProperty,that.DependencyExpression,filter);               
                             that._dataSource = x;
                            
                             that._isDataReady = true;  
@@ -288,7 +300,9 @@ export class KPIWidget extends DependencyReceiver {
 
                             resolve(that._dataSource);                            
                         }                        
-                    );            
+                    ).catch(function(){
+                        console.log('ds load error');
+                    }); ;            
                 }  
 
             //keyAttr
@@ -306,7 +320,7 @@ export class DatePicker extends Widget implements IDependencySubject {
     ){     
         super('DatePicker',true );
     }
-    DependencyPropertyName:string="";
+    DependencyProperty:string="";
     update(x: any):void{
         
     }
@@ -324,7 +338,7 @@ export class ImageWidget extends Widget{
 export class FusionWidget extends DependencyReceiver implements IDependencySubject{
     _fcType:string;
     _isDataReady:boolean;  
-    DependencyPropertyName:string="";    
+    DependencyProperty:string="";    
     labelAttr:string="";
     keyAttr:string="";
     valAttr:string="";
@@ -369,7 +383,7 @@ export class FusionWidget extends DependencyReceiver implements IDependencySubje
 
                     //if (ds !=null)
                     {
-                    that._dataSource = this._chartDataProvider.generateChartDataSource(that, dataSource,  that["labelAttr"],that["keyAttr"],that["valAttr"], that.DependencyPropertyName,that.DependencyPropertyExpression);
+                    that._dataSource = this._chartDataProvider.generateChartDataSource(that, dataSource,  that["labelAttr"],that["keyAttr"],that["valAttr"], that.DependencyProperty,that.DependencyExpression);
                     //todo ide promise kellene
                     that._isDataReady = true;
                     
@@ -379,14 +393,20 @@ export class FusionWidget extends DependencyReceiver implements IDependencySubje
                 else if (this.dataSourceID) 
                 {
                     var that = this;
-                    this._chartDataProvider.getDsService().get(this.dataSourceID).then(x=>
+                    var owner:any = null;
+                    if (that._meta && that._meta.owner ){
+                        owner =this._meta.owner;
+                    }
+                    this._chartDataProvider.getDsService().get(this.dataSourceID,owner).then(x=>
                         {
                             dataSource=x;
-                            that._dataSource = this._chartDataProvider.generateChartDataSource(that, dataSource, that["labelAttr"],that["keyAttr"],that["valAttr"],that.DependencyPropertyName,that.DependencyPropertyExpression,filter);               
+                            that._dataSource = this._chartDataProvider.generateChartDataSource(that, dataSource, that["labelAttr"],that["keyAttr"],that["valAttr"],that.DependencyProperty,that.DependencyExpression,filter);               
                             that._isDataReady = true;                                                         
                             resolve(that._dataSource);                            
                         }                        
-                    );            
+                    ).catch(function(){
+                        console.log('ds load error');
+                    }); 
                 }  
                  
          });  
@@ -397,15 +417,18 @@ export class FusionWidget extends DependencyReceiver implements IDependencySubje
 }
 
 export class SingleSeriesFusionWidget extends FusionWidget{  
+    public labelStep:number = -1;
+    public drawAnchors:boolean = true;
+    public showValue:boolean = true;
  constructor(   
         typename:string,    
         _chartDataProvider: UIDesignerService, 
         dataSourceID:string,
         labelAttr:string,
         keyAttr:string,
-        valAttr:string
+        valAttr:string      
     ){      
-        super(typename,'SingleSeries',_chartDataProvider,dataSourceID, labelAttr, keyAttr, valAttr);     
+        super(typename,'SingleSeries, Tabular',_chartDataProvider,dataSourceID, labelAttr, keyAttr, valAttr);     
     }
 }
 
@@ -486,9 +509,9 @@ export class Bar2D extends SingleSeriesFusionWidget{
 
 export class WidgetFact
 {
-    static createWidget(json:any, chartDataProvider: UIDesignerService, context?:any ):Widget {
+    static createWidget(json:any, chartDataProvider: UIDesignerService, context?:any, meta?: DashMeta):Widget {
         
-        let result:Widget;
+        let result:Widget;        
         if(json.type == 'Container'){
             result= new Container(json.orientation);
         }
@@ -530,6 +553,7 @@ export class WidgetFact
         if (json.dataSourceID){
             (<DataSourcedWidget>result).dataSourceID = json.dataSourceID?json.dataSourceID:'';
         }
+        result._meta= meta;
         result.height = json.height?json.height:400;
         result.width = json.width?json.width:600;        
         result.title =json.title||''; 

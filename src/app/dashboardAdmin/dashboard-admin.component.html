@@ -26,6 +26,7 @@
                     [selectionMode]="all"
                     [selectAllMode]="allPages"                
                     [showSelectionControls]="true"
+                    keyExpr="id"
                     [(selectedItemKeys)]="selectedItems">
                         <div *dxTemplate="let data of 'item'">
                             {{data.name}}

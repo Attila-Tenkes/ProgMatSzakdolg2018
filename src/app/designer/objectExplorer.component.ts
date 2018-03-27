@@ -9,7 +9,8 @@ import { DesignerComponent }from './designer.component'
 
 @Component({   
     selector:'ctlExplorer',
-    templateUrl: './objectExplorer.component.html'    
+    templateUrl: './objectExplorer.component.html',
+    styleUrls: ['./designer.component.css']
 })
 
 export class ObjectExplorerComponent {
