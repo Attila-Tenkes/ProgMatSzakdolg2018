@@ -41,10 +41,10 @@ export class UserService implements CanActivate {
     register(email: string, password: string){
         firebase.auth().createUserWithEmailAndPassword(email, password)
             .catch(function(error) {                
-                notify(`${error.message} Please Try Again!`,"Error",2000);
+                notify(`${error.message} Please Try Again!`,"Error",2000);               
         });
-    }
-
+    }   
+    
     verifyUser() {
         this.authUser = firebase.auth().currentUser;
         if (this.authUser) {
@@ -71,13 +71,17 @@ export class UserService implements CanActivate {
                     console.log('creating users root  ') ;
                 }                     
             });          
-        }
+        }   
     }
 
     login(loginEmail: string, loginPassword: string) {
         firebase.auth().signInWithEmailAndPassword(loginEmail, loginPassword)
+        .then(function(msg){
+            console.log(`xxx ${msg}`);
+        })
             .catch(function(error) {                
                 notify(`${error.message} Unable to login. Try again!`,"Error",2000);
+                console.log(`xxx ${error.message}`);
         });
     }
 

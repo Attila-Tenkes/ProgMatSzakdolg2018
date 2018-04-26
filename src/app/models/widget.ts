@@ -113,6 +113,7 @@ export class Label extends Widget{
     public fontSize: string;
     public fontWeight: string;
     public fontColor: string;
+    public label:string="";
     constructor( ){     
         super('Label',true );
         //set defaults
@@ -125,7 +126,7 @@ export class Label extends Widget{
 export class GridWidget extends DependencyReceiver  {
     constructor(  protected _dataProvider: UIDesignerService,  
     ){     
-        super('GridWidget','Tabular',true );
+        super('GridWidget','Tabular,SingleSeries',true );
     }    
   
     _isDataReady:boolean;  
@@ -196,8 +197,8 @@ export class KPIWidget extends DependencyReceiver {
     public lowerTreshhold:number=1;
     public lowerColor:string='';
 
-    //public keyAttr:string="",
-    public valAttr:string=""
+    public label:string="";
+    public valAttr:string="";
     public _calcResult:number=0;
     public _calcColor='#0a0a0a';
 
@@ -214,12 +215,12 @@ export class KPIWidget extends DependencyReceiver {
     notify(x: any):void{
         super.notify(x);
 
-        /*
+        
         this.load(null, x).then(x=>{
 
             this._tag.notify();
         });
-        */
+        
     }
     
     load(ds?:DataSource, filter?:any):Promise<any>{         

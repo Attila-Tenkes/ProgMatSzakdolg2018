@@ -6,7 +6,7 @@ import { KPIWidget } from '../models/widget';
 @Component({
     selector: 'ctlKPI',
     template: `                        
-    <span [ngStyle]="setStyles()"> {{widget.title}} {{widget._calcResult}} </span>
+    <span [ngStyle]="setStyles()"> {{widget.label}} {{widget._calcResult}} </span>
     `  
 })             
 export class KPIComponent  {   

@@ -29,10 +29,10 @@ import { DashboardAddComponent }    from './dashboardAdd/dashboard-add.component
 import { UIDesignerService } from './services/designer.service';
 
 import { DesignerComponent } from './designer/designer.component';
-import { LabelComponent } from './components/label.component';
-import { ImageComponent } from './components/image.component';
-import { KPIComponent } from './components/kpi.component';
-import { ChartComponent } from './components/chart.component';
+import { LabelComponent } from './widgets/label.component';
+import { ImageComponent } from './widgets/image.component';
+import { KPIComponent } from './widgets/kpi.component';
+import { ChartComponent } from './widgets/chart.component';
 import { LayoutDesignerComponent } from './designer/layoutDesigner.component';
 import { ObjectExplorerComponent } from './designer/objectExplorer.component';
 import { ToolbarComponent } from './designer/toolbar.component';
@@ -54,7 +54,7 @@ import { DxButtonModule, DxPopupModule } from 'devextreme-angular';
 import { DxSelectBoxModule, DxCheckBoxModule, DxListModule, DxDataGridModule, DxDateBoxModule } from 'devextreme-angular';
 import { DxScrollViewModule, DxScrollViewComponent, DxGalleryModule}from 'devextreme-angular';
 
-import { SingleSeriesChartComponent } from './components/singleSeriesChart.component';
+import { SingleSeriesChartComponent } from './widgets/singleSeriesChart.component';
 
 
 @NgModule({

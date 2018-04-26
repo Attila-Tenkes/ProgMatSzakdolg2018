@@ -6,7 +6,7 @@ import { Label } from '../models/widget';
 @Component({
     selector: 'ctlLabel',
     template: `                        
-    <span [ngStyle]="setStyles()"> {{widget.title}} </span>
+    <span [ngStyle]="setStyles()"> {{widget.label}} </span>
     `  
 })             
 export class LabelComponent  {   

@@ -40,7 +40,7 @@ export class ObjectInspectorComponent implements AfterViewInit{
     getAvailableDataSources(){
         if (this.root.selected.widget instanceof widgets.DataSourcedWidget && this.theDataSources && this.theDataSources.length>0){
             var format = (<widgets.DataSourcedWidget>this.root.selected.widget)._dataFormat;
-            var dss = this.theDataSources.filter( ds => format.indexOf(ds.format)>= 0);            
+            var dss = this.theDataSources.filter( ds => format.indexOf(ds.format)>= 0 || format.indexOf('any')>=0);            
             return  dss;
         }
         return [];        

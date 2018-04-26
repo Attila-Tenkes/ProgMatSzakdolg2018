@@ -225,7 +225,7 @@ export class UIDesignerService {
                             {                                                           
                                 chartData.data.push(
                                     {
-                                        "label":data.rows[i][labelAttr],
+                                        "label":data.rows[i][labelAttr]!=undefined && data.rows[i][labelAttr] instanceof Date?data.rows[i][labelAttr].toLocaleDateString():data.rows[i][labelAttr],
                                         "value":data.rows[i][valAttr].replace(/"/g, '').replace(/'/g, ''),
                                         "key":  data.rows[i][keyAttr],
                                         "showValue":(<SingleSeriesFusionWidget>widget).showValue 
@@ -281,24 +281,47 @@ export class UIDesignerService {
 
     generateGridDataSource(dataSource:DataSource, depPropExp?:any, filter?:any):any
     {     
-            //debugger;                          
+           // debugger;                          
             var result:any = {}; result.rows=[];                   
             var that = this;
             var de = new DependencyExp(depPropExp,filter);
             //todo: cache?
-            dataSource.load(function(x:any){                
-                var data = that.csv2Objects(x, true, dataSource.csvSkip, dataSource.csvSeparator, function(obj:any){return de.isMatch(obj)});  
-                // apply filter
-                var filterdData: any[] = new Array<any>();  
-                for (var i=0;i<data.rows.length;i++){  
-                    if (de.isMatch(data.rows[i]))
-                    {    
-                        filterdData.push(data.rows[i]);
+            if (dataSource.format == "SingleSeries"  && dataSource.url) //single series Webservice
+            {  
+              
+                dataSource.load(function(x:any){                 
+                    if (depPropExp.length > 0){
+                        de= new DependencyExp(depPropExp,filter);
                     }
-                }  
-                result.rows = filterdData;// data.rows;
-                result.columns = data.columns;                                 
-            })                        
+                    debugger;
+                    var data = x;
+                    var filterdData: any[] = new Array<any>();  
+                    for (var i=0;i<data.length;i++){  
+                        if (de.isMatch(data[i]))
+                        {    
+                            filterdData.push(data[i]);
+                        }
+                    }  
+                    result.rows = filterdData;// data.rows;
+                    result.columns = data.columns; 
+                });
+            }
+            else
+            {
+                dataSource.load(function(x:any){                
+                    var data = that.csv2Objects(x, true, dataSource.csvSkip, dataSource.csvSeparator, function(obj:any){return de.isMatch(obj)});  
+                    // apply filter
+                    var filterdData: any[] = new Array<any>();  
+                    for (var i=0;i<data.rows.length;i++){  
+                        if (de.isMatch(data.rows[i]))
+                        {    
+                            filterdData.push(data.rows[i]);
+                        }
+                    }  
+                    result.rows = filterdData;// data.rows;
+                    result.columns = data.columns;                                 
+                })   
+            }                     
             return result;    
     }
 

@@ -57,6 +57,7 @@ export class RawDashData {
            if (json.labelStep){this.widget["labelStep"] = json.labelStep;}
            if (json.drawAnchors!=undefined){this.widget["drawAnchors"] = json.drawAnchors;}
            if (json.showValue!=undefined){this.widget["showValue"] = json.showValue;}
+           if (json.label!=undefined){this.widget["label"] = json.label;}
          
            this.cells= [];
            if (json.cells)
@@ -96,6 +97,7 @@ export class RawDashData {
                 result.fontSize=(<Label>this.widget).fontSize;
                 result.fontWeight=(<Label>this.widget).fontWeight;
                 result.fontColor=(<Label>this.widget).fontColor;
+                result.label=(<Label>this.widget).label;
             }
             else if (this.widget instanceof KPIWidget){
                 result.fontSize=(<KPIWidget>this.widget).fontSize;
@@ -107,6 +109,7 @@ export class RawDashData {
                 result.lowerColor=(<KPIWidget>this.widget).lowerColor;
                 result.calculation=(<KPIWidget>this.widget).calculation;
                 result.valAttr = this.widget["valAttr"];
+                result.label=(<Label>this.widget).label;
             }
             if ( this.widget instanceof DataSourcedWidget){
                 result.dataSourceID = this.widget.dataSourceID;

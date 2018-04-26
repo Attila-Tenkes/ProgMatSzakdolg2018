@@ -69,7 +69,7 @@
                             <input type="checkbox" [(ngModel)]="root.selected.widget[prop]" (change)="onKey4($event)">   
                         </div>
                         <div *ngSwitchDefault>
-                            <input type="text" [(ngModel)]="root.selected.widget[prop]" >                         
+                            <input type="text" [(ngModel)]="root.selected.widget[prop]" (change)="onKey4($event)">                         
                         </div>  
                        
                     </div>                                                 
