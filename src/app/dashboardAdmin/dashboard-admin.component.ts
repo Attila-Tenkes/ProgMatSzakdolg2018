@@ -110,8 +110,9 @@ export class DashboardAdminComponent implements OnInit {
             {           
                 //debugger;                
                 var users = readers.filter(reader => reader.id!=this.userKey);       
-                var uids = Object.keys(users).map(key => users[key].id);     
-                this.designerSVC.updateReaders(update, raw,  uids, this.allUsersExceptLoggedIn);                   
+                //var uids = Object.keys(users).map(key => users[key].id);   
+                  console.log('Debug: users: '+users);
+                this.designerSVC.updateReaders(update, raw,  users, this.allUsersExceptLoggedIn);                   
             }
        );
        notify("Successfully saved!", "Success", 2000);                                  

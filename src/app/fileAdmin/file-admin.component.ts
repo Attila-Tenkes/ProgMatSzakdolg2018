@@ -39,8 +39,8 @@ export class FileAdminComponent implements OnInit {
     }
 
     getFiles(){
-        /*debugger;
-        this.theFiles = new Array<DashFile>();
+        debugger;
+      /*  this.theFiles = new Array<DashFile>();
         let dbRef = firebase.database().ref('files/');
         var that=this;
         dbRef.on('value', function(snapshot){
@@ -73,7 +73,9 @@ export class FileAdminComponent implements OnInit {
            var dataFiles = all.dataFiles;
            var images = all.images;
            that.theFiles = [];
-           Object.keys(dataFiles).map(key =>that.theFiles.push( new DashFile (
+           if(dataFiles)
+           {
+                Object.keys(dataFiles).map(key =>that.theFiles.push( new DashFile (
                      dataFiles[key].displayName,
                      dataFiles[key].desc,
                      dataFiles[key].fileName,
@@ -81,7 +83,10 @@ export class FileAdminComponent implements OnInit {
                      dataFiles[key].id,                   
                      dataFiles[key].url
                     )));
-            Object.keys(images).map(key => that.theFiles.push(new DashFile (
+            }
+            if (images)
+            {
+                Object.keys(images).map(key => that.theFiles.push(new DashFile (
                      images[key].displayName,
                      images[key].desc,
                      images[key].fileName,
@@ -89,6 +94,7 @@ export class FileAdminComponent implements OnInit {
                      images[key].id,                   
                      images[key].url
                     )));
+            }
         })       
           /*  var that = this;
             this.fileAdminSVC.getImages().then(

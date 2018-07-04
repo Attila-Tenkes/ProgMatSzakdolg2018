@@ -247,11 +247,14 @@ export class KPIWidget extends DependencyReceiver {
                     if (that._meta && that._meta.owner ){
                         owner =this._meta.owner;
                     }
+
                     this._chartDataProvider.getDsService().get(this.dataSourceID,owner).then(x=>
                         {
                             dataSource=x;
-                           // that._dataSource = this._chartDataProvider.generateKPIDataSource(dataSource,that["keyAttr"],that["valAttr"],that.DependencyProperty,that.DependencyExpression,filter);               
-                            that._dataSource = x;
+                            that._dataSource = this._chartDataProvider.generateGridDataSource(dataSource,that.DependencyExpression,filter); 
+                           var data:any = that._dataSource;
+                           var rows:any[] = data.rows;
+                            //that._dataSource = x;
                            
                             that._isDataReady = true;  
                             
@@ -261,17 +264,18 @@ export class KPIWidget extends DependencyReceiver {
                             var max = 0;
                             var cnt =0;
                             
-                            dataSource.load(function(rows:any){
+                           var val =0;
                                 cnt = rows.length;  
-                                min = rows[0][that.valAttr];  
-                                max = rows[0][that.valAttr];      
+                                min = Number.POSITIVE_INFINITY;  
+                                max = Number.NEGATIVE_INFINITY;      
                                 for (var i=0;i<rows.length;i++){
-                                    acc += rows[i][that.valAttr];
-                                    if (min>rows[i][that.valAttr]){
-                                        min = rows[i][that.valAttr];
+                                    val = typeof(rows[i][that.valAttr]) == 'string'? Number.parseFloat(rows[i][that.valAttr].replace(/,/g, '.')):rows[i][that.valAttr];
+                                    acc += val;                                    
+                                    if (min>val){
+                                        min = val;
                                     }
-                                    if (max<rows[i][that.valAttr]){
-                                        max = rows[i][that.valAttr];
+                                    if (max<val){
+                                        max =val;
                                     }
                                 }
 
@@ -297,7 +301,7 @@ export class KPIWidget extends DependencyReceiver {
                                 else{                               
                                     that._calcColor = that.fontColor;
                                 }
-                            });
+                           
 
                             resolve(that._dataSource);                            
                         }                        

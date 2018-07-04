@@ -48,7 +48,10 @@ export class UIDesignerService {
     save(dashbaord:DecoratedDashData){
          //debugger;
          let dashboardRef = this.getUserObjRef().child(dashbaord.meta.id);
-         dashboardRef.update({ raw: dashbaord.toJSON()})  
+         dashboardRef.update({ raw: dashbaord.toJSON()} )  
+            .then((snapshot)=>{
+                notify(`successfully saved`,"Success",2000);
+            })
             .catch ((error)=>{                
                 notify(`failed upload: ${error}`,"Error",2000);
             });
@@ -178,17 +181,20 @@ export class UIDesignerService {
                     };
                     for (var j=0; j<x[i].values.length;j++)
                     {
-                        var isMatch = !de || de.isMatch(x.values[i]);
+                        var isMatch = !de || de.isMatch(x[i].values[j]);
                         if (isMatch && keyAttr && keyAttr.length>0 && valAttr && valAttr.length>0)
                         {
                             ds.data.push({"value":x[i].values[j][valAttr]});
-                            if (i==0){
-                                chartData.categories[0].category.push({"label":x[i].values[j][labelAttr]})
-                            }
+                          
+                        }
+                        if (i==0)
+                        {
+                            chartData.categories[0].category.push({"label":x[i].values[j][labelAttr]})
                         }
                     }
-                    
-                    chartData.dataset.push(ds);        
+                    if (ds.data.length>0){
+                        chartData.dataset.push(ds);        
+                    }
                 }
             });
             return chartData
@@ -374,19 +380,23 @@ export class UIDesignerService {
         }     
         for(var i=skipRows;i<lines.length;i++){
 
-            var obj = {};
-            var currentline=lines[i].split(colSeparator);        
-            for(var j=0;j<headers.length;j++){
-                if (headers[j].indexOf('Date')>=0){
-                    obj[headers[j]]= new Date(currentline[j]);
-                }
-                else
-                {
-                    obj[headers[j]]= currentline[j];
-                }
-            }  
-                    	 
-            rows.push(obj);                       
+            var obj = {};  
+            if (lines[i]  !=   '' )
+            {
+                var currentline=lines[i].split(colSeparator);   
+            
+                for(var j=0;j<headers.length;j++){
+                    if (headers[j].indexOf('Date')>=0){
+                        obj[headers[j]]= new Date(currentline[j]);
+                    }
+                    else
+                    {
+                        obj[headers[j]]= currentline[j].trim().replace(/"/g, '').replace(/'/g, '');
+                    }
+                }  
+                            
+                rows.push(obj);     
+            }                  
         }
         return result;
     }
